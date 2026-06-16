@@ -20,16 +20,18 @@ class AlarmSchedule (private val context: Context){
 
     fun schedule(){
         val triggerTime= Calendar.getInstance().apply {
-            set(Calendar.HOUR_OF_DAY, 0)
-            set(Calendar.MINUTE,0)
-            set(Calendar.SECOND, 20)
+//            set(Calendar.HOUR_OF_DAY, 0)
+//            set(Calendar.MINUTE,0)
+            add(Calendar.SECOND, 20) //for testing
 
             if(before(Calendar.getInstance())){
                 add(Calendar.DATE, 1)
             }
 
         }
+        Log.i("ALARM_DEBUG","${triggerTime.time}")
 
+        Log.i("ALARM_DEBUG","${Calendar.getInstance()}")
 
         alarmManager?.setExactAndAllowWhileIdle(
             AlarmManager.RTC_WAKEUP,
