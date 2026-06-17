@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">CleverAlarmClock</string>
+    <string name="notification_title">Alarm Clock</string>
+    <string name="notification_description">It is time to wake up</string>
 </resources>
