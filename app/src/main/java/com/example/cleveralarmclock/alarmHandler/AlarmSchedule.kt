@@ -1,12 +1,12 @@
 package com.example.cleveralarmclock.alarmHandler
 
-import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import java.util.Calendar
+import java.time.LocalDateTime
+import java.time.ZoneId
 
 class AlarmSchedule (private val context: Context){
     val intent = Intent(context, AlarmReceiver::class.java)
@@ -19,29 +19,35 @@ class AlarmSchedule (private val context: Context){
     )
 
     fun schedule(){
-        val triggerTime= Calendar.getInstance().apply {
-//            set(Calendar.HOUR_OF_DAY, 0)
-//            set(Calendar.MINUTE,0)
-            add(Calendar.SECOND, 20) //for testing
+        var localTime = LocalDateTime.now().plusSeconds(5) //for testing
+//            .withHour(0)
+//            .withMinute(0)
+//            .withSecond(5)
+//            .withNano(0)
 
-            if(before(Calendar.getInstance())){
-                add(Calendar.DATE, 1)
-            }
-
+        if (localTime.isBefore(LocalDateTime.now())) {
+            localTime = localTime.plusDays(1)
         }
-        Log.i("ALARM_DEBUG","${triggerTime.time}")
 
-        Log.i("ALARM_DEBUG","${Calendar.getInstance()}")
+        val triggerTime = localTime
+            .atZone(ZoneId.systemDefault())
+            .toInstant()
+            .toEpochMilli()
+
+        Log.i("ALARM_DEBUG","${LocalDateTime.now()}")
+
+        Log.i("ALARM_DEBUG","${localTime}")
 
         alarmManager?.setExactAndAllowWhileIdle(
             AlarmManager.RTC_WAKEUP,
-            triggerTime.timeInMillis,
+            triggerTime,
             pendingIntent
         )
         Log.i("ALARM_DEBUG","Будильник устоновлен")
     }
 
     fun cancel(){
+        Log.i("ALARM_DEBUG","Будильник отменен")
         alarmManager?.cancel(pendingIntent)
     }
 }
