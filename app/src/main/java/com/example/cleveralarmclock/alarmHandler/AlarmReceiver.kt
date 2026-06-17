@@ -13,23 +13,27 @@ import com.example.cleveralarmclock.MainActivity
 import com.example.cleveralarmclock.R
 
 class AlarmReceiver : BroadcastReceiver() {
-    override fun onReceive(context: Context?, intent: Intent?) {
-        val startAppIntent = Intent(context, MainActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            putExtra("ALARM_TRIGGERED",true)
-        }
-        Log.i("ALARM_DEBUG","start")
-        val ctx = context ?: return
-        val fullScreenPendingIntent = PendingIntent.getActivity(
-            ctx,
-            0,
-            startAppIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
-        val channelId = "alarm_channel_id"
 
-        val notificationManager = (ctx.getSystemService(Context.NOTIFICATION_SERVICE) ) as NotificationManager
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+    override fun onReceive(context: Context?, intent: Intent?) {
+        val ctx = context ?: return
+
+        if (intent?.action == "android.intent.action.BOOT_COMPLETED"){
+            // TODO
+        }else{
+            Log.i("ALARM_DEBUG", "Время пришло! Показываем уведомление звонка.")
+            val startAppIntent = Intent(context, MainActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                putExtra("ALARM_TRIGGERED",true)
+            }
+            val pendingIntent: PendingIntent = PendingIntent.getActivity(
+                context,
+                0,
+                startAppIntent,
+                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            )
+            val channelId = "chanelId"
+            val notificationManager: NotificationManager = context.getSystemService(
+                NotificationManager::class.java) as NotificationManager
             val channel = NotificationChannel(
                 channelId,
                 ctx.getString(R.string.notification_title),
@@ -37,17 +41,22 @@ class AlarmReceiver : BroadcastReceiver() {
             ).apply {
                 description = ctx.getString(R.string.notification_description)
             }
-            notificationManager.createNotificationChannel(channel)
-        }
 
-        val notificationBuilder = NotificationCompat.Builder(ctx, channelId)
-            .setSmallIcon(android.R.drawable.ic_lock_idle_alarm)
-            .setContentTitle(ctx.getString(R.string.notification_title))
-            .setContentText(ctx.getString(R.string.notification_description))
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
-            .setCategory(NotificationCompat.CATEGORY_ALARM)
-            .setFullScreenIntent(fullScreenPendingIntent, true)
-        notificationManager.notify(1, notificationBuilder.build())
+            notificationManager.createNotificationChannel(channel)
+
+            val builder = NotificationCompat.Builder(context, channelId)
+                .setSmallIcon(android.R.drawable.ic_lock_idle_alarm)
+                .setContentTitle(ctx.getString(R.string.notification_title))
+                .setContentText(ctx.getString(R.string.notification_description))
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setCategory(NotificationCompat.CATEGORY_ALARM)
+                .setFullScreenIntent(pendingIntent, true)
+
+            notificationManager.notify(1, builder.build())
+
+
+
+        }
     }
 
 }
