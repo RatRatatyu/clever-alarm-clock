@@ -1,14 +1,9 @@
 package com.example.cleveralarmclock
 
-import android.annotation.SuppressLint
-import android.app.AlarmManager
-import android.app.PendingIntent
-import android.content.Context
-import android.content.Intent
+import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
@@ -37,11 +32,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
-import com.example.cleveralarmclock.alarmHandler.AlarmReceiver
-import com.example.cleveralarmclock.ui.theme.CleverAlarmClockTheme
-import java.util.Calendar
-import android.Manifest
 import com.example.cleveralarmclock.alarmHandler.AlarmSchedule
+import com.example.cleveralarmclock.presentation.mainScreenFeature.MainScreen
+import com.example.cleveralarmclock.ui.theme.CleverAlarmClockTheme
 
 
 class MainActivity : ComponentActivity() {
@@ -77,7 +70,7 @@ class MainActivity : ComponentActivity() {
                     }
                 }
             }
-            
+
             if (isFormAlarm) {
                 ScreenForAlarm()
             } else {
@@ -86,28 +79,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
-
-@Composable
-fun MainScreen(modifier: Modifier = Modifier) {
-    val context = LocalContext.current;
-    val sch = AlarmSchedule(context = context);
-    Scaffold (
-        modifier = modifier.fillMaxSize()
-    ){ innerPading->
-        Column (
-            modifier = modifier
-                .fillMaxSize()
-                .padding(innerPading)
-        ){
-            Button(onClick ={ sch.schedule() }) { Text("Start alarm clokcl")}
-            Button(onClick ={ sch.cancel() }) { Text("Cancle alarm clokcl")}
-
-        }
-
-    }
-}
-
 
 
 @OptIn(ExperimentalMaterial3Api::class)
