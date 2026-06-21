@@ -5,10 +5,14 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+import dagger.hilt.android.qualifiers.ApplicationContext
 import java.time.LocalDateTime
 import java.time.ZoneId
+import javax.inject.Inject
 
-class AlarmSchedule (private val context: Context){
+class AlarmSchedule @Inject constructor(
+    @ApplicationContext private val context: Context
+){
     val intent = Intent(context, AlarmReceiver::class.java)
     val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
     val pendingIntent = PendingIntent.getBroadcast(
