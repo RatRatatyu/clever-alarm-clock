@@ -8,13 +8,21 @@ import javax.inject.Inject
 
 //Camera Notification
 
+
+
 class PermissionHandler @Inject constructor(
     @ApplicationContext private val context: Context,
     ){
 
-    fun hasPermission(permission: String): Boolean {
-        return ContextCompat.checkSelfPermission(
-            context, permission
-        ) == PackageManager.PERMISSION_GRANTED
+    fun hasPermission(permission: String): PermissionTypes {
+        val state = ContextCompat.checkSelfPermission(
+            context,permission
+        )
+        return if(state == PackageManager.PERMISSION_GRANTED){
+            PermissionTypes.GRANTED
+        }else{
+            PermissionTypes.DENIED
+        }
+
     }
 }
