@@ -1,5 +1,6 @@
 package com.example.cleveralarmclock.core.service.alarmHandler
 
+import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
@@ -13,16 +14,17 @@ import javax.inject.Inject
 class AlarmSchedule @Inject constructor(
     @ApplicationContext private val context: Context
 ){
-    val intent = Intent(context, AlarmReceiver::class.java)
     val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
-    val pendingIntent = PendingIntent.getBroadcast(
-        context,
-        0,
-        intent,
-        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-    )
 
+    @SuppressLint("MissingPermission")
     fun schedule(){
+        val intent = Intent(context, AlarmReceiver::class.java)
+        val pendingIntent = PendingIntent.getBroadcast(
+            context,
+            0,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
         var localTime = LocalDateTime.now().plusSeconds(5) //for testing
 //            .withHour(0)
 //            .withMinute(0)
@@ -38,19 +40,30 @@ class AlarmSchedule @Inject constructor(
             .toInstant()
             .toEpochMilli()
 
+        val info = AlarmManager.AlarmClockInfo(
+            triggerTime,
+            pendingIntent
+        )
+
         Log.i("ALARM_DEBUG","${LocalDateTime.now()}")
 
         Log.i("ALARM_DEBUG","${localTime}")
 
-        alarmManager?.setExactAndAllowWhileIdle(
-            AlarmManager.RTC_WAKEUP,
-            triggerTime,
+        alarmManager?.setAlarmClock(
+            info,
             pendingIntent
         )
         Log.i("ALARM_DEBUG","Будильник устоновлен")
     }
 
     fun cancel(){
+        val intent = Intent(context, AlarmReceiver::class.java)
+        val pendingIntent = PendingIntent.getBroadcast(
+            context,
+            0,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
         Log.i("ALARM_DEBUG","Будильник отменен")
         alarmManager?.cancel(pendingIntent)
     }
