@@ -1,9 +1,11 @@
 package com.example.cleveralarmclock
 
 import android.Manifest
-import android.content.pm.PackageManager
+import android.content.Intent
+
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
@@ -31,12 +33,18 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import com.example.cleveralarmclock.core.service.permission.PermissionHandler
+import com.example.cleveralarmclock.core.service.permission.PermissionTypes
 import com.example.cleveralarmclock.presentation.mainScreenFeature.MainScreen
 import com.example.cleveralarmclock.ui.theme.CleverAlarmClockTheme
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    @Inject
+    lateinit var permissionHandler: PermissionHandler
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -44,7 +52,6 @@ class MainActivity : ComponentActivity() {
 
         enableEdgeToEdge()
         setContent {
-            val context = LocalContext.current
 
             val permissionLauncher = rememberLauncherForActivityResult(
                 contract = ActivityResultContracts.RequestPermission()
@@ -59,12 +66,9 @@ class MainActivity : ComponentActivity() {
 
             LaunchedEffect(Unit) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    val hasPermission = ContextCompat.checkSelfPermission(
-                        context,
-                        Manifest.permission.POST_NOTIFICATIONS
-                    ) == PackageManager.PERMISSION_GRANTED
+                    val hasPermission = permissionHandler.hasPermission(Manifest.permission.POST_NOTIFICATIONS)
 
-                    if (!hasPermission) {
+                    if (hasPermission == PermissionTypes.DENIED) {
                         permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
                     }
                 }
