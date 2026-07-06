@@ -57,15 +57,6 @@ class AlarmReceiver : BroadcastReceiver() {
 
             notificationManager.notify(1, builder.build())
 
-            startAppIntent.addFlags(
-                Intent.FLAG_ACTIVITY_NEW_TASK or
-                        Intent.FLAG_ACTIVITY_SINGLE_TOP
-            )
-
-            ctx.startActivity(startAppIntent)
-
-
-
         }
     }
 
