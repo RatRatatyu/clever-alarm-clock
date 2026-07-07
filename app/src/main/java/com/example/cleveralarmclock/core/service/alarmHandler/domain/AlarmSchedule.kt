@@ -1,4 +1,4 @@
-package com.example.cleveralarmclock.core.service.alarmHandler
+package com.example.cleveralarmclock.core.service.alarmHandler.domain
 
 import android.annotation.SuppressLint
 import android.app.AlarmManager
@@ -6,6 +6,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+import com.example.cleveralarmclock.core.service.alarmHandler.receiver_service.AlarmReceiver
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -68,5 +69,3 @@ class AlarmSchedule @Inject constructor(
         alarmManager?.cancel(pendingIntent)
     }
 }
-
-
