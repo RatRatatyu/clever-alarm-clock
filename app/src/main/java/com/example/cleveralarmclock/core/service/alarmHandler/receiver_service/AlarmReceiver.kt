@@ -1,4 +1,4 @@
-package com.example.cleveralarmclock.core.service.alarmHandler
+package com.example.cleveralarmclock.core.service.alarmHandler.receiver_service
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
