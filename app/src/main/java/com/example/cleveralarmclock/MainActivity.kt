@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -33,9 +34,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.cleveralarmclock.core.service.permission.PermissionHandler
 import com.example.cleveralarmclock.core.service.permission.PermissionTypes
 import com.example.cleveralarmclock.presentation.mainScreenFeature.MainScreen
+import com.example.cleveralarmclock.presentation.mainScreenFeature.data.MainViewModel
 import com.example.cleveralarmclock.ui.theme.CleverAlarmClockTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -86,7 +89,10 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ScreenForAlarm(modifier: Modifier = Modifier) {
+fun ScreenForAlarm( //for testing
+    modifier: Modifier = Modifier,
+    viewModel: MainViewModel = hiltViewModel(),
+) {
     Scaffold(
         Modifier.fillMaxSize(),
         {
@@ -112,7 +118,7 @@ fun ScreenForAlarm(modifier: Modifier = Modifier) {
                     .background(color = Color.Blue),
                 contentAlignment = Alignment.Center
             ){
-               Text("Alarm Clockl", style = MaterialTheme.typography.titleLarge)
+                Button(onClick = { viewModel.stopAlarmService() }){Text("stop sound")}
             }
         }
 
