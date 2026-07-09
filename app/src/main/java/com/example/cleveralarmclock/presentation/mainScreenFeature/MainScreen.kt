@@ -3,12 +3,14 @@ package com.example.cleveralarmclock.presentation.mainScreenFeature
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.Button
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -44,32 +46,19 @@ fun MainScreen(
             }
         }
     ) { innerPadding ->
-        Box(
-            modifier = Modifier
+        Column (
+            modifier = modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-        ) {
+        ){
+            Button(
+                onClick = { viewModel.stopAlarm() }
+            ) { Text("Cancel Alarm Clock") }
 
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                items(listForTest) { item ->
+            Button(
+                onClick = { viewModel.stopAlarmService() }
+            ) { Text("Stop Music and Server") }
 
-                    Box(
-                        modifier = Modifier
-                            .padding(12.dp)
-                            .background(Color.Blue),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            item,
-                            style = MaterialTheme.typography.titleLarge,
-                            color = Color.White
-                        )
-                    }
-                }
-            }
         }
     }
 }
