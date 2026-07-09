@@ -21,6 +21,11 @@ class AlarmService: Service() {
     @Inject
     lateinit var alarmPlayer: AlarmPlayer
 
+    override fun onCreate() {
+        super.onCreate()
+        alarmPlayer.registrationPlayer()
+    }
+
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         val startAppIntent = Intent(this, MainActivity::class.java).apply {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
@@ -57,6 +62,8 @@ class AlarmService: Service() {
             .setFullScreenIntent(pendingIntent, true)
             .build()
 
+        alarmPlayer.startPlayer()
+
         ServiceCompat.startForeground(
             this,
              100,
@@ -73,6 +80,7 @@ class AlarmService: Service() {
 
     override fun onDestroy() {
         super.onDestroy()
+        alarmPlayer.stopPlayer()
     }
 
     override fun onBind(intent: Intent?): IBinder? = null
