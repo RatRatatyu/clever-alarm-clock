@@ -27,7 +27,7 @@ fun MainScreen(
             .fillMaxSize(),
         floatingActionButton = {
             FloatingActionButton(
-                onClick = {viewModel.startAlarm()} //for test
+                onClick = {} //for test
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,
