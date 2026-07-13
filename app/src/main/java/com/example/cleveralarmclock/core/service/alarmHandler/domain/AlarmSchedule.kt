@@ -13,12 +13,12 @@ import java.time.ZoneId
 import javax.inject.Inject
 
 class AlarmSchedule @Inject constructor(
-    @ApplicationContext private val context: Context
+    @ApplicationContext private val context: Context,
 ){
     val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
 
     @SuppressLint("MissingPermission")
-    fun schedule(){
+    fun schedule(hour: Int, minute: Int){
         val intent = Intent(context, AlarmReceiver::class.java)
         val pendingIntent = PendingIntent.getBroadcast(
             context,
@@ -26,11 +26,11 @@ class AlarmSchedule @Inject constructor(
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
-        var localTime = LocalDateTime.now().plusSeconds(5) //for testing
-//            .withHour(0)
-//            .withMinute(0)
-//            .withSecond(5)
-//            .withNano(0)
+        var localTime = LocalDateTime.now()
+            .withHour(hour)
+            .withMinute(minute)
+            .withSecond(0)
+            .withNano(0)
 
         if (localTime.isBefore(LocalDateTime.now())) {
             localTime = localTime.plusDays(1)
