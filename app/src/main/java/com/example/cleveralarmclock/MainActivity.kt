@@ -39,6 +39,7 @@ import com.example.cleveralarmclock.core.service.permission.PermissionHandler
 import com.example.cleveralarmclock.core.service.permission.PermissionTypes
 import com.example.cleveralarmclock.presentation.mainScreenFeature.MainScreen
 import com.example.cleveralarmclock.presentation.mainScreenFeature.data.MainViewModel
+import com.example.cleveralarmclock.presentation.manageAlarmFeature.SettingsAlarm
 import com.example.cleveralarmclock.ui.theme.CleverAlarmClockTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -80,7 +81,7 @@ class MainActivity : ComponentActivity() {
             if (isFormAlarm) {
                 ScreenForAlarm()
             } else {
-                MainScreen()
+                SettingsAlarm()
             }
         }
     }
