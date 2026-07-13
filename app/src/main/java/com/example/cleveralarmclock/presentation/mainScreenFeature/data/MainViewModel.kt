@@ -13,8 +13,8 @@ class MainViewModel @Inject constructor(
     @dagger.hilt.android.qualifiers.ApplicationContext private val context: Context
 ): ViewModel() {
 
-    fun startAlarm() {
-        alarmSchedule.schedule()
+    fun startAlarm(hour: Int, minute: Int) {
+        alarmSchedule.schedule(hour, minute)
     }
 
     fun stopAlarm(){
