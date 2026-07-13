@@ -24,7 +24,7 @@ class AlarmPlayer @Inject constructor(
 
 
         exoPlayer = ExoPlayer.Builder(context)
-            .setAudioAttributes(audioAttributes, true)
+            .setAudioAttributes(audioAttributes, false)
             .build()
     }
 
