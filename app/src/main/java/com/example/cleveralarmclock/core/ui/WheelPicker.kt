@@ -31,17 +31,22 @@ fun WheelPicker(
     modifier: Modifier = Modifier,
     items: List<String>,
     initialItem: String,
-    onItemSelected: (String) -> Unit
+    onItemSelected: (String) -> Unit,
+    isInfinite: Boolean = true
 ) {
     val itemHeight = 45.dp
-    val maxItems = Int.MAX_VALUE
+    val maxItems = if(isInfinite) Int.MAX_VALUE else items.size + 4
 
     val targetIndex = items.indexOf(initialItem).coerceAtLeast(0)
-    val baseCenterIndex = maxItems / 2 - (maxItems / 2 % items.size)
 
-    //  since the height is exactly 5 elements,
-    //  we subtract 2 so that the target item becomes exactly in the middle
-    val startIndex = baseCenterIndex + targetIndex - 2
+    val startIndex = if(isInfinite){
+        //  since the height is exactly 5 elements,
+        //  we subtract 2 so that the target item becomes exactly in the middle
+        val baseCenterIndex = maxItems / 2 - (maxItems / 2 % items.size)
+        baseCenterIndex + targetIndex - 2
+    } else{
+        targetIndex
+    }
 
     val listState = rememberLazyListState(initialFirstVisibleItemIndex = startIndex)
     val snapFlingBehavior = rememberSnapFlingBehavior(lazyListState = listState)
@@ -63,10 +68,12 @@ fun WheelPicker(
         snapshotFlow { currentCenteredIndex.value }
             .distinctUntilChanged()
             .collect { virtualIndex ->
-                val realIndex = virtualIndex % items.size
+                // Subtract 2 for the final list to adjust for empty spaces
+                val realIndex = if(isInfinite) virtualIndex % items.size else virtualIndex - 2
 
                 if (realIndex in items.indices) {
                     onItemSelected(items[realIndex])
+
                 }
             }
     }
@@ -97,8 +104,9 @@ fun WheelPicker(
                     else -> 0.15f
                 }
 
-                val realIndex = index % items.size
-                val item = items[realIndex]
+                val realIndex = if(isInfinite) index % items.size else index -2
+                val isValidItem = realIndex in items.indices
+                val item = if (isValidItem) items[realIndex] else ""
 
                 Box(
                     modifier = Modifier
