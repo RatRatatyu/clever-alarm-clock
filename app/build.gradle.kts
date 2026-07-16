@@ -3,9 +3,9 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     id("kotlin-kapt")
+    alias(libs.plugins.ksp)
     alias(libs.plugins.android.hilt)
 }
-
 android {
     namespace = "com.example.cleveralarmclock"
     compileSdk {
@@ -43,17 +43,19 @@ android {
     }
 }
 
-kapt {
-    correctErrorTypes = true
-}
+
 
 dependencies {
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)
+
     implementation(libs.androidx.media3.session)
     implementation(libs.androidx.media3.exoplayer)
     implementation(libs.androidx.media3.ui)
+
     implementation(libs.hilt.android)
-    implementation(libs.androidx.compose.material.core)
-    kapt(libs.hilt.compiler)
+    ksp(libs.hilt.compiler)
     implementation(libs.hilt.navigation.compose)
 
     implementation(libs.androidx.core.ktx)
