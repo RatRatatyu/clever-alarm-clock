@@ -67,7 +67,13 @@ fun SettingsAlarm(
                     color = Color.White
                 )
             }
-            Button(onClick = {}) { Text("add")}
+            Button(
+                onClick = {
+                    viewModel.onAddAlarmClock()
+                }
+            ) {
+                Text("Add")
+            }
         }
     }
 }
