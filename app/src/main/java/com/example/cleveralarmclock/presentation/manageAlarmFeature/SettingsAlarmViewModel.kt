@@ -3,11 +3,15 @@ package com.example.cleveralarmclock.presentation.manageAlarmFeature
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import android.text.format.DateFormat
+import androidx.lifecycle.viewModelScope
+import com.example.cleveralarmclock.core.data.repository.AlarmRepository
+import com.example.cleveralarmclock.core.database.entity.AlarmEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import java.time.LocalTime
 import javax.inject.Inject
 
@@ -20,7 +24,9 @@ data class SettingAlarmState(
 )
 
 @HiltViewModel
-class SettingsAlarmViewModel @Inject constructor(): ViewModel() {
+class SettingsAlarmViewModel @Inject constructor(
+    private val alarmRepository: AlarmRepository
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SettingAlarmState())
     val uiState: StateFlow<SettingAlarmState> = _uiState.asStateFlow()
@@ -40,28 +46,48 @@ class SettingsAlarmViewModel @Inject constructor(): ViewModel() {
             selectedAmPm = if (now.hour < 12) "AM" else "PM"
         }
 
-        _uiState.update { it.copy(
-            selectedHours = selectedHours,
-            selectedMinutes = selectedMinutes,
-            selectedAmPm = selectedAmPm,
-            is24Hours = is24Hour
-        ) }
+        _uiState.update {
+            it.copy(
+                selectedHours = selectedHours,
+                selectedMinutes = selectedMinutes,
+                selectedAmPm = selectedAmPm,
+                is24Hours = is24Hour
+            )
+        }
     }
 
-    fun onHoursChange(hours: String){
-        _uiState.update { it.copy(
-            selectedHours = hours
-        ) }
+    fun onHoursChange(hours: String) {
+        _uiState.update {
+            it.copy(
+                selectedHours = hours
+            )
+        }
     }
 
-    fun onMinutesChange(minutes: String){
-        _uiState.update { it.copy(
-            selectedMinutes = minutes
-        ) }
+    fun onMinutesChange(minutes: String) {
+        _uiState.update {
+            it.copy(
+                selectedMinutes = minutes
+            )
+        }
     }
-    fun onAmPmChange(amPm: String){
-        _uiState.update { it.copy(
-            selectedAmPm = amPm
-        ) }
+
+    fun onAmPmChange(amPm: String) {
+        _uiState.update {
+            it.copy(
+                selectedAmPm = amPm
+            )
+        }
+    }
+
+    fun onAddAlarmClock() {
+        viewModelScope.launch {
+            alarmRepository.insertAlarm(
+                AlarmEntity(
+                    hours = _uiState.value.selectedHours.toInt(),
+                    minutes = _uiState.value.selectedMinutes.toInt()
+                )
+            )
+        }
     }
 }
