@@ -27,6 +27,4 @@ interface AlarmDao {
 
     @Query("SELECT * FROM alarmEntity")
     fun getAllAlarmClock(): Flow<List<AlarmEntity>>
-
-
 }
