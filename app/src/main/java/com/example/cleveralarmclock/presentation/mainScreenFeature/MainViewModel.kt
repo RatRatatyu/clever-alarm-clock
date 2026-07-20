@@ -1,17 +1,25 @@
-package com.example.cleveralarmclock.presentation.mainScreenFeature.data
+package com.example.cleveralarmclock.presentation.mainScreenFeature
 
 import android.content.Context
 import android.content.Intent
 import androidx.lifecycle.ViewModel
+import com.example.cleveralarmclock.core.data.repository.AlarmRepository
+import com.example.cleveralarmclock.core.database.entity.AlarmEntity
 import com.example.cleveralarmclock.core.service.alarmHandler.domain.AlarmSchedule
 import com.example.cleveralarmclock.core.service.alarmHandler.receiver_service.AlarmService
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
+
 @HiltViewModel
 class MainViewModel @Inject constructor(
     val alarmSchedule: AlarmSchedule,
-    @dagger.hilt.android.qualifiers.ApplicationContext private val context: Context
+    val alarmRepository: AlarmRepository,
+    @ApplicationContext private val context: Context
 ): ViewModel() {
+
+    val scheduleFlow: Flow<List<AlarmEntity>> = alarmRepository.getAllAlarms()
 
     fun startAlarm(hour: Int, minute: Int) {
         alarmSchedule.schedule(hour, minute)
