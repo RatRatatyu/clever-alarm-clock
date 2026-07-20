@@ -3,6 +3,7 @@ package com.example.cleveralarmclock.presentation.mainScreenFeature
 import android.content.Context
 import android.content.Intent
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.cleveralarmclock.core.data.repository.AlarmRepository
 import com.example.cleveralarmclock.core.database.entity.AlarmEntity
 import com.example.cleveralarmclock.core.service.alarmHandler.domain.AlarmSchedule
@@ -10,6 +11,7 @@ import com.example.cleveralarmclock.core.service.alarmHandler.receiver_service.A
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -20,6 +22,16 @@ class MainViewModel @Inject constructor(
 ): ViewModel() {
 
     val scheduleFlow: Flow<List<AlarmEntity>> = alarmRepository.getAllAlarms()
+
+    fun toggleAlarmStatus(alarm: AlarmEntity){
+        viewModelScope.launch {
+            alarmRepository.updateAlarm(
+                alarm.copy(
+                    isActivate = !alarm.isActivate
+                )
+            )
+        }
+    }
 
     fun startAlarm(hour: Int, minute: Int) {
         alarmSchedule.schedule(hour, minute)
