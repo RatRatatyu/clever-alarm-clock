@@ -1,11 +1,8 @@
 package com.example.cleveralarmclock
 
 import android.Manifest
-import android.content.Intent
-
 import android.os.Build
 import android.os.Bundle
-import android.provider.Settings
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
@@ -21,7 +18,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -30,16 +26,14 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.cleveralarmclock.core.service.permission.PermissionHandler
 import com.example.cleveralarmclock.core.service.permission.PermissionTypes
 import com.example.cleveralarmclock.presentation.mainScreenFeature.MainScreen
-import com.example.cleveralarmclock.presentation.mainScreenFeature.data.MainViewModel
-import com.example.cleveralarmclock.presentation.manageAlarmFeature.SettingsAlarm
+import com.example.cleveralarmclock.presentation.mainScreenFeature.MainViewModel
+import com.example.cleveralarmclock.presentation.navigation.AppNavHost
 import com.example.cleveralarmclock.ui.theme.CleverAlarmClockTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -78,11 +72,7 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
-            if (isFormAlarm) {
-                ScreenForAlarm()
-            } else {
-                SettingsAlarm()
-            }
+            AppNavHost()
         }
     }
 }
@@ -127,10 +117,3 @@ fun ScreenForAlarm( //for testing
 }
 
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    CleverAlarmClockTheme {
-        MainScreen()
-    }
-}
