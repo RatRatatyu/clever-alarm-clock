@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class GetAlarmsUseCase @Inject constructor(
-    val alarmRepository: AlarmRepository,
+    private val alarmRepository: AlarmRepository,
 ) {
 
     operator fun invoke(): Flow<List<AlarmEntity>> {
