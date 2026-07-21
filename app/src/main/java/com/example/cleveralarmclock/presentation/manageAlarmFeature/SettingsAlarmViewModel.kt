@@ -6,6 +6,7 @@ import android.text.format.DateFormat
 import androidx.lifecycle.viewModelScope
 import com.example.cleveralarmclock.core.data.repository.AlarmRepository
 import com.example.cleveralarmclock.core.database.entity.AlarmEntity
+import com.example.cleveralarmclock.core.domain.usecase.AddAlarmUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -25,7 +26,7 @@ data class SettingAlarmState(
 
 @HiltViewModel
 class SettingsAlarmViewModel @Inject constructor(
-    private val alarmRepository: AlarmRepository
+    private val addAlarmUseCase: AddAlarmUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SettingAlarmState())
@@ -82,12 +83,10 @@ class SettingsAlarmViewModel @Inject constructor(
 
     fun onAddAlarmClock() {
         viewModelScope.launch {
-            alarmRepository.insertAlarm(
-                AlarmEntity(
-                    hours = _uiState.value.selectedHours.toInt(),
-                    minutes = _uiState.value.selectedMinutes.toInt()
-                )
-            )
+            addAlarmUseCase(AlarmEntity(
+                hours = _uiState.value.selectedHours.toInt(),
+                minutes = _uiState.value.selectedMinutes.toInt()
+            ))
         }
     }
 }
