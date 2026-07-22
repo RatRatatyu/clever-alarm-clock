@@ -13,6 +13,7 @@ import androidx.core.app.ServiceCompat
 import com.example.cleveralarmclock.MainActivity
 import com.example.cleveralarmclock.R
 import com.example.cleveralarmclock.core.service.alarmHandler.domain.AlarmPlayer
+import com.example.cleveralarmclock.presentation.alarmAlertFeature.AlarmAlertActivity
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 @AndroidEntryPoint
@@ -27,14 +28,16 @@ class AlarmService: Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        val startAppIntent = Intent(this, MainActivity::class.java).apply {
+        val alarmId = intent?.getIntExtra("ALARM_ID", 0)
+
+        val startAppIntent = Intent(this, AlarmAlertActivity::class.java).apply {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-            putExtra("ALARM_TRIGGERED", true)
+            putExtra("ALARM_ID", alarmId)
         }
 
         val pendingIntent: PendingIntent = PendingIntent.getActivity(
             this,
-            0,
+            alarmId ?: 0,
             startAppIntent,
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
@@ -62,7 +65,7 @@ class AlarmService: Service() {
             .setFullScreenIntent(pendingIntent, true)
             .build()
 
-        alarmPlayer.startPlayer()
+        //alarmPlayer.startPlayer()
 
         ServiceCompat.startForeground(
             this,
@@ -80,7 +83,7 @@ class AlarmService: Service() {
 
     override fun onDestroy() {
         super.onDestroy()
-        alarmPlayer.stopPlayer()
+        //alarmPlayer.stopPlayer()
     }
 
     override fun onBind(intent: Intent?): IBinder? = null
