@@ -2,4 +2,22 @@
     <string name="app_name">CleverAlarmClock</string>
     <string name="notification_title">Alarm Clock</string>
     <string name="notification_description">It is time to wake up</string>
+
+    <string name="will_ring_in_less_than_a_minute">Will ring in less than a minute</string>
+
+    <plurals name="hours_count">
+        <item quantity="one">%d hour</item>
+        <item quantity="few">%d hours</item>
+        <item quantity="many">%d hours</item>
+        <item quantity="other">%d hours</item>
+    </plurals>
+
+    <plurals name="minutes_count">
+        <item quantity="one">%d minute</item>
+        <item quantity="few">%d minutes</item>
+        <item quantity="many">%d minutes</item>
+        <item quantity="other">%d minutes</item>
+    </plurals>
+
+    <string name="will_ring_in_format">Will ring in %1$s %2$s</string>
 </resources>
