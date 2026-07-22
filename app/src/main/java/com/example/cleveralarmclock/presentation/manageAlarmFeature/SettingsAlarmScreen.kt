@@ -1,6 +1,6 @@
 package com.example.cleveralarmclock.presentation.manageAlarmFeature
 
-
+import java.util.Locale
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -72,7 +72,15 @@ fun SettingsAlarm(
                     .weight(2f),
                 contentAlignment = Alignment.Center
             ) {
-                WheelTimePicker()
+                WheelTimePicker(
+                    is24Hours =  uiState.is24Hours,
+                    selectedHours = uiState.selectedHours,
+                    selectedMinutes = uiState.selectedMinutes,
+                    selectedAmPm = uiState.selectedAmPm,
+                    onHoursChange = { hours -> viewModel.onHoursChange(hours) },
+                    onMinutesChange = { minutes -> viewModel.onMinutesChange(minutes) },
+                    onAmPmChange = { amPm -> viewModel.onAmPmChange(amPm) }
+                )
             }
 
             Box(
@@ -83,7 +91,7 @@ fun SettingsAlarm(
                 contentAlignment = Alignment.Center
             ){
                 Text(
-                    text = "${uiState.selectedHours} : ${uiState.selectedMinutes} ${uiState.selectedAmPm}",
+                    text = "${"%02d".format(Locale.getDefault(), uiState.selectedHours)} : ${"%02d".format(Locale.getDefault(),uiState.selectedMinutes)} ${uiState.selectedAmPm}",
                     style = MaterialTheme.typography.headlineLarge,
                     color = Color.White
                 )
