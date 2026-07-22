@@ -18,8 +18,8 @@ import javax.inject.Inject
 
 
 data class SettingAlarmState(
-    val selectedHours: String = "",
-    val selectedMinutes: String = "",
+    val selectedHours: Int = 0,
+    val selectedMinutes: Int = 0,
     val is24Hours: Boolean = true,
     val selectedAmPm: String = "AM"
 )
@@ -37,13 +37,13 @@ class SettingsAlarmViewModel @Inject constructor(
         val is24Hour = DateFormat.is24HourFormat(context)
         val now = LocalTime.now()
 
-        val selectedMinutes = "%02d".format(now.minute)
-        var selectedHours = "%02d".format(now.hour)
+        val selectedMinutes = now.minute
+        var selectedHours = now.hour
         var selectedAmPm = "AM"
 
         if (!is24Hour) {
             val hour12 = now.hour % 12
-            selectedHours = "%02d".format(if (hour12 == 0) 12 else hour12)
+            selectedHours = if (hour12 == 0) 12 else hour12
             selectedAmPm = if (now.hour < 12) "AM" else "PM"
         }
 
@@ -57,7 +57,7 @@ class SettingsAlarmViewModel @Inject constructor(
         }
     }
 
-    fun onHoursChange(hours: String) {
+        fun onHoursChange(hours: Int) {
         _uiState.update {
             it.copy(
                 selectedHours = hours
@@ -65,7 +65,7 @@ class SettingsAlarmViewModel @Inject constructor(
         }
     }
 
-    fun onMinutesChange(minutes: String) {
+    fun onMinutesChange(minutes: Int) {
         _uiState.update {
             it.copy(
                 selectedMinutes = minutes
@@ -84,8 +84,8 @@ class SettingsAlarmViewModel @Inject constructor(
     fun onAddAlarmClock() {
         viewModelScope.launch {
             addAlarmUseCase(AlarmEntity(
-                hours = _uiState.value.selectedHours.toInt(),
-                minutes = _uiState.value.selectedMinutes.toInt()
+                hours = _uiState.value.selectedHours,
+                minutes = _uiState.value.selectedMinutes
             ))
         }
     }
