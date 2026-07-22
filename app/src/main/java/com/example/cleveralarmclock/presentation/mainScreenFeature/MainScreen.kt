@@ -1,6 +1,6 @@
 package com.example.cleveralarmclock.presentation.mainScreenFeature
 
-
+import java.util.Locale
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,15 +13,20 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.cleveralarmclock.R
 import com.example.cleveralarmclock.presentation.mainScreenFeature.components.CardScheduledAlarm
 
 
@@ -52,37 +57,45 @@ fun MainScreen(
         if(scheduleList.isEmpty()){
             Column (
                 modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding),
+                    .fillMaxSize()
+                    .padding(innerPadding),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ){ Text(
-                "You have no alarm clocks yet. Press + to add.",
+                stringResource(R.string.you_have_no_alarm_clocks_yet_press_to_add),
                 style = MaterialTheme.typography.titleMedium
             ) }
         }else{
-
             Column (
-
+                Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding),
+                verticalArrangement = Arrangement.Top,
+                horizontalAlignment = Alignment.CenterHorizontally
             ){
                 nextAlarmText?.let { text ->
                     Text(
                         text = text,
-                        modifier = Modifier.padding(16.dp)
+                        style = MaterialTheme.typography.headlineSmall,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 40.dp),
+                        textAlign = androidx.compose.ui.text.style.TextAlign.Center
                     )
                 }
 
                 LazyColumn (
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(innerPadding),
+                        .weight(1f),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ){
                     items(scheduleList, key= {it.id} ){ alarm ->
                         CardScheduledAlarm(
                             Modifier,
-                            hour = "%02d".format(alarm.hours),
-                            minute = "%02d".format(alarm.minutes),
+
+                            hour = String.format(Locale.getDefault(), "%02d", alarm.hours),
+                            minute = String.format(Locale.getDefault(), "%02d", alarm.minutes),
                             isActive = alarm.isActivate,
                             onChanged = {viewModel.toggleAlarmStatus(alarm)}
 
@@ -96,4 +109,13 @@ fun MainScreen(
     }
 }
 
-
+@Preview(showSystemUi = true)
+@Composable
+fun MainScreenPrev(){
+    MaterialTheme{
+        MainScreen(
+            onAddAlarmClick = {},
+            viewModel = viewModel()
+        )
+    }
+}
