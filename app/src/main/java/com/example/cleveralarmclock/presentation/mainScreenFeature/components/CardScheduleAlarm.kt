@@ -11,10 +11,13 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchColors
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
@@ -29,10 +32,14 @@ fun CardScheduledAlarm(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .height(100.dp)
+            .height(150.dp)
             .padding(10.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant,
+            containerColor = if(isActive) {
+                MaterialTheme.colorScheme.primary
+            } else {
+                MaterialTheme.colorScheme.surfaceVariant
+                },
         ),
     ) {
         Row (
@@ -78,7 +85,20 @@ fun CardScheduledAlarm(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ){
-                Switch(checked = isActive, onCheckedChange = { _ -> onChanged() })
+                Switch(
+                    checked = isActive,
+                    onCheckedChange = { _ -> onChanged() },
+                    colors = SwitchDefaults.colors(
+
+                        checkedThumbColor = Color.White,
+                        checkedTrackColor = Color.Gray,
+                        checkedBorderColor = Color.Transparent,
+
+                        uncheckedThumbColor = Color.Gray,
+                        uncheckedTrackColor = Color.White,
+                        uncheckedBorderColor = Color.Gray
+                    )
+                )
             }
         }
     }
