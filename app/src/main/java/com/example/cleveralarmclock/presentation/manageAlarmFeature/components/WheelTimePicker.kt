@@ -25,19 +25,27 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.cleveralarmclock.core.ui.WheelPicker
 import com.example.cleveralarmclock.presentation.manageAlarmFeature.SettingsAlarmViewModel
+import java.util.Locale
 
 @Composable
 fun WheelTimePicker(
-    modifier: Modifier = Modifier,    viewModel: SettingsAlarmViewModel = hiltViewModel()
+    modifier: Modifier = Modifier,
+    is24Hours: Boolean,
+    selectedHours: Int,
+    selectedMinutes: Int,
+    selectedAmPm: String = "",
+    onHoursChange: (Int) -> Unit,
+    onMinutesChange: (Int) -> Unit,
+    onAmPmChange: (String) -> Unit = {}
 ){
-    val uiState by viewModel.uiState.collectAsState()
 
-    val hoursList = remember(uiState.is24Hours) {
-        val size = if (uiState.is24Hours) 24 else 12
-        val offset = if (uiState.is24Hours) 0 else 1
-        List(size) { index -> "%02d".format(index + offset) }
+
+    val hoursList = remember(is24Hours) {
+        val size = if (is24Hours) 24 else 12
+        val offset = if (is24Hours) 0 else 1
+        List(size) { index -> index + offset}
     }
-    val minutesList = remember { List(60) { index -> "%02d".format(index) } }
+    val minutesList = remember { List(60) { index -> index }}
     val amPmList = remember { listOf("AM", "PM") }
 
     Column(
@@ -63,7 +71,7 @@ fun WheelTimePicker(
                 modifier = Modifier.weight(1f),
                 textAlign = androidx.compose.ui.text.style.TextAlign.Center
             )
-            if (!uiState.is24Hours) {
+            if (!is24Hours) {
                 Text(
                     text = "Format",
                     style = MaterialTheme.typography.titleSmall,
@@ -97,8 +105,9 @@ fun WheelTimePicker(
                 ){
                     WheelPicker(
                         items = hoursList,
-                        initialItem = uiState.selectedHours,
-                        onItemSelected = { hours -> viewModel.onHoursChange(hours) }
+                        initialItem = selectedHours,
+                        onItemSelected = { hours -> onHoursChange(hours) },
+                        displayText = { String.format(Locale.getDefault(), "%02d", it) }
                     )
                 }
 
@@ -109,12 +118,13 @@ fun WheelTimePicker(
                 ){
                     WheelPicker(
                         items = minutesList,
-                        initialItem = uiState.selectedMinutes,
-                        onItemSelected = { minutes -> viewModel.onMinutesChange(minutes) }
+                        initialItem = selectedMinutes,
+                        onItemSelected = { minutes -> onMinutesChange(minutes) },
+                        displayText = { String.format(Locale.getDefault(), "%02d", it) }
                     )
                 }
 
-                if(!uiState.is24Hours){
+                if(!is24Hours){
                     // AM PM COLUMN
                     Column (
                         modifier = Modifier.weight(1f),
@@ -122,9 +132,10 @@ fun WheelTimePicker(
                     ){
                         WheelPicker(
                             items = amPmList,
-                            initialItem = uiState.selectedAmPm,
-                            onItemSelected = { amPm -> viewModel.onAmPmChange(amPm) },
-                            isInfinite = false
+                            initialItem = selectedAmPm,
+                            onItemSelected = { amPm -> onAmPmChange(amPm) },
+                            isInfinite = false,
+                            displayText = { it }
                         )
                     }
                 }
