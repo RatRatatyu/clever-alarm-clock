@@ -11,6 +11,7 @@ interface AlarmRepository {
 
     suspend fun deleteAlarm(alarm: AlarmEntity)
 
+    fun  getActiveAlarms(): Flow<List<AlarmEntity>>
     suspend fun updateAlarm(alarm: AlarmEntity)
 
     suspend fun deleteById(alarmId: Int)
