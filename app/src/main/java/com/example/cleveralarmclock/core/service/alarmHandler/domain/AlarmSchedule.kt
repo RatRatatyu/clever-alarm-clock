@@ -18,11 +18,14 @@ class AlarmSchedule @Inject constructor(
     val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
 
     @SuppressLint("MissingPermission")
-    fun schedule(hour: Int, minute: Int){
-        val intent = Intent(context, AlarmReceiver::class.java)
+    fun schedule(hour: Int, minute: Int, id: Int){
+
+        val intent = Intent(context, AlarmReceiver::class.java).apply {
+            putExtra("ALARM_ID", id)
+        }
         val pendingIntent = PendingIntent.getBroadcast(
             context,
-            0,
+            id,
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
@@ -48,7 +51,7 @@ class AlarmSchedule @Inject constructor(
 
         Log.i("ALARM_DEBUG","${LocalDateTime.now()}")
 
-        Log.i("ALARM_DEBUG","${localTime}")
+        Log.i("ALARM_DEBUG","$localTime")
 
         alarmManager?.setAlarmClock(
             info,
@@ -57,15 +60,15 @@ class AlarmSchedule @Inject constructor(
         Log.i("ALARM_DEBUG","Будильник устоновлен")
     }
 
-    fun cancel(){
+    fun cancel(id: Int){
         val intent = Intent(context, AlarmReceiver::class.java)
         val pendingIntent = PendingIntent.getBroadcast(
             context,
-            0,
+            id,
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
-        Log.i("ALARM_DEBUG","Будильник отменен")
+        Log.i("ALARM_DEBUG","Будильник отменен $id")
         alarmManager?.cancel(pendingIntent)
     }
 }
