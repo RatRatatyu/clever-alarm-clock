@@ -27,12 +27,13 @@ import kotlin.math.abs
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun WheelPicker(
+fun<T> WheelPicker(
     modifier: Modifier = Modifier,
-    items: List<String>,
-    initialItem: String,
-    onItemSelected: (String) -> Unit,
-    isInfinite: Boolean = true
+    items: List<T>,
+    initialItem: T,
+    onItemSelected: (T) -> Unit,
+    isInfinite: Boolean = true,
+    displayText: (T) -> String = { it.toString() }
 ) {
     val itemHeight = 45.dp
     val maxItems = if(isInfinite) Int.MAX_VALUE else items.size + 4
@@ -106,7 +107,7 @@ fun WheelPicker(
 
                 val realIndex = if(isInfinite) index % items.size else index -2
                 val isValidItem = realIndex in items.indices
-                val item = if (isValidItem) items[realIndex] else ""
+                val item = if (isValidItem) items[realIndex] else null
 
                 Box(
                     modifier = Modifier
@@ -120,7 +121,7 @@ fun WheelPicker(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = item,
+                        text = item?.let { displayText(it) } ?: "",
                         style = MaterialTheme.typography.titleLarge,
                         modifier = Modifier.alpha(alphaValue)
                     )
