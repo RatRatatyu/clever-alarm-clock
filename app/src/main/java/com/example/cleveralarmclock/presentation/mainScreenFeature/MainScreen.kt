@@ -19,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.cleveralarmclock.presentation.mainScreenFeature.components.CardScheduledAlarm
@@ -31,7 +32,8 @@ fun MainScreen(
     viewModel: MainViewModel = hiltViewModel(),
 ) {
 
-    val scheduleList by viewModel.scheduleFlow.collectAsStateWithLifecycle(initialValue = emptyList())
+    val scheduleList by viewModel.scheduleFlow.collectAsStateWithLifecycle()
+    val nextAlarmText by viewModel.nextAlarmTime.collectAsStateWithLifecycle()
 
     Scaffold(
         modifier = modifier
@@ -59,23 +61,36 @@ fun MainScreen(
                 style = MaterialTheme.typography.titleMedium
             ) }
         }else{
-            LazyColumn (
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(innerPadding),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ){
-                items(scheduleList, key= {it.id} ){ alarm ->
-                    CardScheduledAlarm(
-                        Modifier,
-                        hour = "%02d".format(alarm.hours),
-                        minute = "%02d".format(alarm.minutes),
-                        isActive = alarm.isActivate,
-                        onChanged = {viewModel.toggleAlarmStatus(alarm)}
 
+            Column (
+
+            ){
+                nextAlarmText?.let { text ->
+                    Text(
+                        text = text,
+                        modifier = Modifier.padding(16.dp)
                     )
                 }
+
+                LazyColumn (
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(innerPadding),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ){
+                    items(scheduleList, key= {it.id} ){ alarm ->
+                        CardScheduledAlarm(
+                            Modifier,
+                            hour = "%02d".format(alarm.hours),
+                            minute = "%02d".format(alarm.minutes),
+                            isActive = alarm.isActivate,
+                            onChanged = {viewModel.toggleAlarmStatus(alarm)}
+
+                        )
+                    }
+                }
             }
+
         }
 
     }
