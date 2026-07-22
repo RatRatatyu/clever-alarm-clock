@@ -20,4 +20,5 @@
     </plurals>
 
     <string name="will_ring_in_format">Will ring in %1$s %2$s</string>
+    <string name="you_have_no_alarm_clocks_yet_press_to_add">You have no alarm clocks yet. Press + to add.</string>
 </resources>
