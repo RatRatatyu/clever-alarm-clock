@@ -1,8 +1,7 @@
-package com.example.cleveralarmclock.core.data.repository
+package com.example.cleveralarmclock.core.domain.repository
 
-import com.example.cleveralarmclock.core.database.entity.AlarmEntity
+import com.example.cleveralarmclock.core.data.database.entity.AlarmEntity
 import kotlinx.coroutines.flow.Flow
-
 
 interface AlarmRepository {
     fun getAllAlarms(): Flow<List<AlarmEntity>>

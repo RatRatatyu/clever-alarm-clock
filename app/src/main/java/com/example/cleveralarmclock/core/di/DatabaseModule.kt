@@ -1,7 +1,7 @@
 package com.example.cleveralarmclock.core.di
 
 import android.content.Context
-import com.example.cleveralarmclock.core.database.AlarmDatabase
+import com.example.cleveralarmclock.core.data.database.AlarmDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

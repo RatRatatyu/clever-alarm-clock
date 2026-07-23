@@ -1,4 +1,4 @@
-package com.example.cleveralarmclock.core.service.alarmHandler.domain
+package com.example.cleveralarmclock.core.service.alarm
 
 import android.content.Context
 import android.util.Log
@@ -8,15 +8,20 @@ import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.exoplayer.ExoPlayer
 import com.example.cleveralarmclock.R
+import com.example.cleveralarmclock.core.domain.alarm.AlarmPlayer
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
+import javax.inject.Singleton
 
-class AlarmPlayer @Inject constructor(
+@Singleton
+class AlarmPlayerImpl @Inject constructor(
     @ApplicationContext private val context: Context
-) {
-    private var exoPlayer: ExoPlayer? = null
+) : AlarmPlayer {
 
-    fun registrationPlayer() {
+    private var exoPlayer: ExoPlayer? = null
+    override fun registrationPlayer() {
+        if (exoPlayer != null) return
+
         val audioAttributes = AudioAttributes.Builder()
             .setUsage(C.USAGE_ALARM)
             .setContentType(C.AUDIO_CONTENT_TYPE_SONIFICATION)
@@ -28,7 +33,7 @@ class AlarmPlayer @Inject constructor(
             .build()
     }
 
-    fun startPlayer() {
+    override fun startPlayer() {
         Log.i("ALARM_DEBUGER", "start music")
 
         if (exoPlayer == null) {
@@ -46,7 +51,7 @@ class AlarmPlayer @Inject constructor(
         }
     }
 
-    fun stopPlayer() {
+    override fun stopPlayer() {
         Log.i("ALARM_DEBUGER", "stop music")
         exoPlayer?.apply {
             stop()

@@ -1,11 +1,11 @@
-package com.example.cleveralarmclock.core.database
+package com.example.cleveralarmclock.core.data.database
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.cleveralarmclock.core.database.dao.AlarmDao
-import com.example.cleveralarmclock.core.database.entity.AlarmEntity
+import com.example.cleveralarmclock.core.data.database.dao.AlarmDao
+import com.example.cleveralarmclock.core.data.database.entity.AlarmEntity
 
 
 @Database(entities = [AlarmEntity::class], version = 1, exportSchema = false)

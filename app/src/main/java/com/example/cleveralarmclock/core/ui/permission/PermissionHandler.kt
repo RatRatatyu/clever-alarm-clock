@@ -1,4 +1,4 @@
-package com.example.cleveralarmclock.core.service.permission
+package com.example.cleveralarmclock.core.ui.permission
 
 import android.content.Context
 import android.content.pm.PackageManager

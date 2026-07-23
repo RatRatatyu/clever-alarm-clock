@@ -48,11 +48,11 @@
             </intent-filter>
         </activity>
         <service
-            android:name=".core.service.alarmHandler.receiver_service.AlarmService"
+            android:name=".core.service.services.AlarmService"
             android:foregroundServiceType="mediaPlayback"
             android:exported="false" />
         <receiver
-            android:name=".core.service.alarmHandler.receiver_service.AlarmReceiver"
+            android:name=".core.service.receivers.AlarmReceiver"
             android:enabled="true"
             android:exported="false" />
     </application>

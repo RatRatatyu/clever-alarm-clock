@@ -1,4 +1,4 @@
-package com.example.cleveralarmclock.core.database.entity
+package com.example.cleveralarmclock.core.data.database.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

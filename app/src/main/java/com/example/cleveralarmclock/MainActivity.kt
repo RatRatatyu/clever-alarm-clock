@@ -9,8 +9,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.LaunchedEffect
-import com.example.cleveralarmclock.core.service.permission.PermissionHandler
-import com.example.cleveralarmclock.core.service.permission.PermissionTypes
+import com.example.cleveralarmclock.core.ui.permission.PermissionHandler
+import com.example.cleveralarmclock.core.ui.permission.PermissionTypes
 import com.example.cleveralarmclock.presentation.navigation.AppNavHost
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject

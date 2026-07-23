@@ -1,6 +1,6 @@
 package com.example.cleveralarmclock.core.di
 
-import com.example.cleveralarmclock.core.data.repository.AlarmRepository
+import com.example.cleveralarmclock.core.domain.repository.AlarmRepository
 import com.example.cleveralarmclock.core.data.repository.AlarmRepositoryImpl
 import dagger.Binds
 import dagger.Module

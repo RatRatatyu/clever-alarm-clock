@@ -1,4 +1,4 @@
-package com.example.cleveralarmclock.core.service.alarmHandler.domain
+package com.example.cleveralarmclock.core.service.alarm
 
 import android.annotation.SuppressLint
 import android.app.AlarmManager
@@ -6,19 +6,20 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import com.example.cleveralarmclock.core.service.alarmHandler.receiver_service.AlarmReceiver
+import com.example.cleveralarmclock.core.domain.alarm.AlarmSchedule
+import com.example.cleveralarmclock.core.service.receivers.AlarmReceiver
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.time.LocalDateTime
 import java.time.ZoneId
 import javax.inject.Inject
 
-class AlarmSchedule @Inject constructor(
+class AlarmScheduleImpl @Inject constructor(
     @ApplicationContext private val context: Context,
-){
-    val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
+): AlarmSchedule{
+    private val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
 
     @SuppressLint("MissingPermission")
-    fun schedule(hour: Int, minute: Int, id: Int){
+    override fun schedule(hour: Int, minute: Int, id: Int){
 
         val intent = Intent(context, AlarmReceiver::class.java).apply {
             putExtra("ALARM_ID", id)
@@ -60,7 +61,7 @@ class AlarmSchedule @Inject constructor(
         Log.i("ALARM_DEBUG","Будильник устоновлен")
     }
 
-    fun cancel(id: Int){
+    override fun cancel(id: Int){
         val intent = Intent(context, AlarmReceiver::class.java)
         val pendingIntent = PendingIntent.getBroadcast(
             context,

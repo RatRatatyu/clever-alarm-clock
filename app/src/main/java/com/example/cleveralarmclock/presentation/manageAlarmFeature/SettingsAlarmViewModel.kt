@@ -4,8 +4,7 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import android.text.format.DateFormat
 import androidx.lifecycle.viewModelScope
-import com.example.cleveralarmclock.core.data.repository.AlarmRepository
-import com.example.cleveralarmclock.core.database.entity.AlarmEntity
+import com.example.cleveralarmclock.core.data.database.entity.AlarmEntity
 import com.example.cleveralarmclock.core.domain.usecase.AddAlarmUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

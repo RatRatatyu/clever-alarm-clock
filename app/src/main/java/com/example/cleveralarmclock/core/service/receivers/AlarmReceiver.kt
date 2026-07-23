@@ -1,15 +1,10 @@
-package com.example.cleveralarmclock.core.service.alarmHandler.receiver_service
+package com.example.cleveralarmclock.core.service.receivers
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import androidx.core.app.NotificationCompat
-import com.example.cleveralarmclock.MainActivity
-import com.example.cleveralarmclock.R
+import com.example.cleveralarmclock.core.service.services.AlarmService
 
 class AlarmReceiver : BroadcastReceiver() {
 

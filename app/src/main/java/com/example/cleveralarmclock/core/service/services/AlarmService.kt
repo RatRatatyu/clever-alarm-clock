@@ -1,4 +1,4 @@
-package com.example.cleveralarmclock.core.service.alarmHandler.receiver_service
+package com.example.cleveralarmclock.core.service.services
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -10,12 +10,12 @@ import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import androidx.core.app.ServiceCompat
-import com.example.cleveralarmclock.MainActivity
 import com.example.cleveralarmclock.R
-import com.example.cleveralarmclock.core.service.alarmHandler.domain.AlarmPlayer
+import com.example.cleveralarmclock.core.domain.alarm.AlarmPlayer
 import com.example.cleveralarmclock.presentation.alarmAlertFeature.AlarmAlertActivity
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
+
 @AndroidEntryPoint
 class AlarmService: Service() {
 

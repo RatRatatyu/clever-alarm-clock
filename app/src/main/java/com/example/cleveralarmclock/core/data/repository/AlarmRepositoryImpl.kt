@@ -1,7 +1,8 @@
 package com.example.cleveralarmclock.core.data.repository
 
-import com.example.cleveralarmclock.core.database.dao.AlarmDao
-import com.example.cleveralarmclock.core.database.entity.AlarmEntity
+import com.example.cleveralarmclock.core.data.database.dao.AlarmDao
+import com.example.cleveralarmclock.core.data.database.entity.AlarmEntity
+import com.example.cleveralarmclock.core.domain.repository.AlarmRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
