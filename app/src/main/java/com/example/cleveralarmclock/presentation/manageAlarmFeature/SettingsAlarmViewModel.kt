@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.cleveralarmclock.core.data.database.entity.AlarmEntity
 import com.example.cleveralarmclock.core.domain.usecase.AddAlarmUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -25,6 +26,7 @@ data class SettingAlarmState(
 
 @HiltViewModel
 class SettingsAlarmViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val addAlarmUseCase: AddAlarmUseCase
 ) : ViewModel() {
 
@@ -32,7 +34,11 @@ class SettingsAlarmViewModel @Inject constructor(
     val uiState: StateFlow<SettingAlarmState> = _uiState.asStateFlow()
 
 
-    fun initializeTime(context: Context) {
+    init {
+        initializeTime()
+    }
+
+    private fun initializeTime() {
         val is24Hour = DateFormat.is24HourFormat(context)
         val now = LocalTime.now()
 
