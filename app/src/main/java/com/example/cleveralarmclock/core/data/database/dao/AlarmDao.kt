@@ -16,17 +16,14 @@ interface AlarmDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(alarm: AlarmEntity): Long
 
-    @Delete
-    suspend fun delete(alarm: AlarmEntity)
+    @Query("DELETE FROM alarmEntity WHERE id IN (:ids)")
+    suspend fun deleteAlarmsByIds(ids: List<Int>)
 
     @Update
     suspend fun update(alarm: AlarmEntity)
 
     @Query("SELECT * FROM alarmEntity WHERE isActivate = 1")
     fun getActiveAlarms(): Flow<List<AlarmEntity>>
-
-    @Query("DELETE FROM alarmEntity WHERE id = :alarmId")
-    suspend fun deleteById(alarmId: Int)
 
     @Query("SELECT * FROM alarmEntity ORDER BY id DESC")
     fun getAllAlarmClock(): Flow<List<AlarmEntity>>
