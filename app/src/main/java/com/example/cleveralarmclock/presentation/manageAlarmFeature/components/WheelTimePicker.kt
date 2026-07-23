@@ -33,10 +33,10 @@ fun WheelTimePicker(
     is24Hours: Boolean,
     selectedHours: Int,
     selectedMinutes: Int,
-    selectedAmPm: String = "",
+    selectedAmPm: String ,
     onHoursChange: (Int) -> Unit,
     onMinutesChange: (Int) -> Unit,
-    onAmPmChange: (String) -> Unit = {}
+    onAmPmChange: (String) -> Unit
 ){
 
 
