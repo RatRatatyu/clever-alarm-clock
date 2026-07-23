@@ -1,8 +1,8 @@
 package com.example.cleveralarmclock.presentation.mainScreenFeature
 
-import java.util.Locale
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -10,13 +10,18 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,8 +33,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.cleveralarmclock.R
 import com.example.cleveralarmclock.presentation.mainScreenFeature.components.CardScheduledAlarm
+import java.util.Locale
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
     modifier: Modifier = Modifier,
@@ -39,10 +46,34 @@ fun MainScreen(
 
     val scheduleList by viewModel.scheduleFlow.collectAsStateWithLifecycle()
     val nextAlarmText by viewModel.nextAlarmTime.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        viewModel.navigationEvent.collect { alarmId ->
+            onAddAlarmClick()
+        }
+    }
 
     Scaffold(
         modifier = modifier
             .fillMaxSize(),
+        topBar = {
+            if (uiState.isSelectedMode) {
+                TopAppBar(
+                    title = {},
+                    navigationIcon = {
+                        IconButton(onClick = { viewModel.clearSelection() }) {
+                            Icon(Icons.Default.Close, contentDescription = stringResource(R.string.cancel))
+                        }
+                    },
+                    actions = {
+                        IconButton(onClick = { viewModel.deleteAlarms() }) {
+                            Icon(Icons.Default.Delete, contentDescription = stringResource(R.string.delete))
+                        }
+                    }
+                )
+            }
+        },
         floatingActionButton = {
             FloatingActionButton(
                 onClick = onAddAlarmClick
@@ -92,13 +123,14 @@ fun MainScreen(
                 ){
                     items(scheduleList, key= {it.id} ){ alarm ->
                         CardScheduledAlarm(
-                            Modifier,
-
                             hour = String.format(Locale.getDefault(), "%02d", alarm.hours),
                             minute = String.format(Locale.getDefault(), "%02d", alarm.minutes),
                             isActive = alarm.isActivate,
-                            onChanged = {viewModel.toggleAlarmStatus(alarm)}
-
+                            onChanged = {viewModel.toggleAlarmStatus(alarm)},
+                            onClick = {viewModel.onPress(alarm)},
+                            onLongClick = {viewModel.onLongPress(alarm)},
+                            isSelectionMode = uiState.isSelectedMode,
+                            isChecked = uiState.selectedList.contains(alarm.id)
                         )
                     }
                 }
