@@ -18,16 +18,12 @@ class AlarmRepositoryImpl @Inject constructor(
         return alarmDao.insert(alarm)
     }
 
-    override suspend fun deleteAlarm(alarm: AlarmEntity) {
-        alarmDao.delete(alarm)
+    override suspend fun deleteAlarmsByIds(ids: List<Int>) {
+        alarmDao.deleteAlarmsByIds(ids)
     }
 
     override fun getActiveAlarms(): Flow<List<AlarmEntity>> {
         return alarmDao.getActiveAlarms()
-    }
-
-    override suspend fun deleteById(alarmId: Int) {
-        alarmDao.deleteById(alarmId)
     }
 
     override suspend fun updateAlarm(alarm: AlarmEntity) {
