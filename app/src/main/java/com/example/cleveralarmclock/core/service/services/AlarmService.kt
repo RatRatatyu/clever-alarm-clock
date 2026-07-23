@@ -65,7 +65,7 @@ class AlarmService: Service() {
             .setFullScreenIntent(pendingIntent, true)
             .build()
 
-        //alarmPlayer.startPlayer()
+        alarmPlayer.startPlayer()
 
         ServiceCompat.startForeground(
             this,
@@ -83,7 +83,7 @@ class AlarmService: Service() {
 
     override fun onDestroy() {
         super.onDestroy()
-        //alarmPlayer.stopPlayer()
+        alarmPlayer.stopPlayer()
     }
 
     override fun onBind(intent: Intent?): IBinder? = null
