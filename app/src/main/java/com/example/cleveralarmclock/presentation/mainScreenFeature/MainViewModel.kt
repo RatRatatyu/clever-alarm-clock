@@ -24,7 +24,8 @@ import javax.inject.Inject
 
 data class MainState(
     val isSelectedMode: Boolean = false,
-    val selectedList: List<Int> = listOf()
+    val selectedList: List<Int> = listOf(),
+    val allSelected: Boolean = false
 )
 @HiltViewModel
 class MainViewModel @Inject constructor(
@@ -83,16 +84,28 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun onLongPress(alarm: AlarmEntity){
-        _uiState.update { state ->
-            if (!state.isSelectedMode) {
-                state.copy(
-                    isSelectedMode = true,
-                    selectedList = listOf(alarm.id)
-                )
-            } else {
-                state
+    fun onLongPress(alarm: AlarmEntity) {
+        if (!_uiState.value.isSelectedMode) {
+            _uiState.update {
+                it.copy(isSelectedMode = true, selectedList = listOf(alarm.id))
             }
+        }
+    }
+
+    fun getAllChecked(){
+        _uiState.update { state ->
+            val newAllSelectedValue = !state.allSelected
+
+            val newList = if (newAllSelectedValue) {
+                scheduleFlow.value.map { it.id }
+            } else {
+                emptyList()
+            }
+
+            state.copy(
+                selectedList = newList,
+                allSelected = newAllSelectedValue
+            )
         }
     }
 
@@ -116,11 +129,9 @@ class MainViewModel @Inject constructor(
 
             state.copy(
                 selectedList = newSelected,
-                isSelectedMode = newSelected.isNotEmpty()
+                isSelectedMode = newSelected.isNotEmpty(),
+                allSelected = newSelected.isNotEmpty() && newSelected.size == scheduleFlow.value.size
             )
         }
     }
-
-
-
 }
