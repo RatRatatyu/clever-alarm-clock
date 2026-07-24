@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
@@ -95,7 +96,14 @@ fun CardScheduledAlarm(
                 if(isSelectionMode){
                     Checkbox(
                         checked = isChecked,
-                        onCheckedChange = { onClick() }
+                        onCheckedChange = { onClick() },
+                        colors = CheckboxDefaults.colors(
+                            checkedColor = Color.Gray,
+                            uncheckedColor = Color.Gray,
+                            checkmarkColor = Color.White,
+                            disabledCheckedColor = Color.LightGray,
+                            disabledUncheckedColor = Color.LightGray
+                        )
                     )
                 }
                 else{
