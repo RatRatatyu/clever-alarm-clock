@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import com.example.cleveralarmclock.R
 import com.example.cleveralarmclock.core.data.database.entity.AlarmEntity
 import java.util.Locale
+import androidx.compose.ui.platform.LocalLocale
 
 
 @Composable
@@ -64,8 +65,8 @@ fun AlarmList(
             ){
                 items(scheduleList, key= {it.id} ){ alarm ->
                     CardScheduledAlarm(
-                        hour = String.format(Locale.getDefault(), "%02d", alarm.hours),
-                        minute = String.format(Locale.getDefault(), "%02d", alarm.minutes),
+                        hour = "%02d".format(LocalLocale.current.platformLocale, alarm.hours),
+                        minute = "%02d".format(LocalLocale.current.platformLocale, alarm.minutes),
                         isActive = alarm.isActivate,
                         onChanged = {toggleAlarmStatus(alarm)},
                         onClick = {onPress(alarm)},
