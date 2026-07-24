@@ -1,24 +1,27 @@
 package com.example.cleveralarmclock.presentation.mainScreenFeature
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -32,8 +35,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.cleveralarmclock.R
-import com.example.cleveralarmclock.presentation.mainScreenFeature.components.CardScheduledAlarm
-import java.util.Locale
+import com.example.cleveralarmclock.presentation.mainScreenFeature.components.AlarmList
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -67,79 +69,76 @@ fun MainScreen(
                         }
                     },
                     actions = {
-                        IconButton(onClick = { viewModel.deleteAlarms() }) {
-                            Icon(Icons.Default.Delete, contentDescription = stringResource(R.string.delete))
+                        IconButton(onClick = { viewModel.getAllChecked() }) {
+                            Icon(Icons.Default.Check, contentDescription = stringResource(R.string.select_all))
                         }
                     }
                 )
             }
         },
+        bottomBar = {
+            if(uiState.isSelectedMode){
+                BottomAppBar {
+                    Spacer(modifier = Modifier.weight(1f))
+
+                    FilledIconButton(
+                        onClick = { viewModel.deleteAlarms() },
+                        modifier = Modifier.size(56.dp),
+                        colors = IconButtonDefaults.filledIconButtonColors(
+                            containerColor = MaterialTheme.colorScheme.errorContainer,
+                            contentColor = MaterialTheme.colorScheme.error
+                        )
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Delete,
+                            contentDescription = stringResource(R.string.delete),
+                            modifier = Modifier.size(28.dp)
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.weight(1f))
+                }
+            }
+        },
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = onAddAlarmClick
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = "Add alarm clock"
-                )
+            if(!uiState.isSelectedMode){
+                FloatingActionButton(
+                    onClick = onAddAlarmClick
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = "Add alarm clock"
+                    )
+                }
             }
         }
     ) { innerPadding ->
-        if(scheduleList.isEmpty()){
-            Column (
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ){ Text(
-                stringResource(R.string.you_have_no_alarm_clocks_yet_press_to_add),
-                style = MaterialTheme.typography.titleMedium
-            ) }
-        }else{
-            Column (
+
+        Column (
+            modifier
+                .fillMaxSize()
+                .padding(innerPadding),
+            verticalArrangement = Arrangement.Center
+        ){
+            Box(
                 Modifier
                     .fillMaxSize()
-                    .padding(innerPadding),
-                verticalArrangement = Arrangement.Top,
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .weight(1f)
             ){
-                nextAlarmText?.let { text ->
-                    Text(
-                        text = text,
-                        style = MaterialTheme.typography.headlineSmall,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 40.dp),
-                        textAlign = androidx.compose.ui.text.style.TextAlign.Center
-                    )
-                }
-
-                LazyColumn (
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ){
-                    items(scheduleList, key= {it.id} ){ alarm ->
-                        CardScheduledAlarm(
-                            hour = String.format(Locale.getDefault(), "%02d", alarm.hours),
-                            minute = String.format(Locale.getDefault(), "%02d", alarm.minutes),
-                            isActive = alarm.isActivate,
-                            onChanged = {viewModel.toggleAlarmStatus(alarm)},
-                            onClick = {viewModel.onPress(alarm)},
-                            onLongClick = {viewModel.onLongPress(alarm)},
-                            isSelectionMode = uiState.isSelectedMode,
-                            isChecked = uiState.selectedList.contains(alarm.id)
-                        )
-                    }
-                }
+                AlarmList(
+                    scheduleList = scheduleList,
+                    nextAlarmText = nextAlarmText,
+                    isSelectedMode = uiState.isSelectedMode,
+                    isChecked = uiState.selectedList,
+                    toggleAlarmStatus = {alarmEntity -> viewModel.toggleAlarmStatus(alarmEntity)},
+                    onPress = {alarmEntity -> viewModel.onPress(alarmEntity)},
+                    onLongPress = {alarmEntity -> viewModel.onLongPress(alarmEntity)}
+                )
             }
-
         }
-
     }
 }
+
 
 @Preview(showSystemUi = true)
 @Composable
