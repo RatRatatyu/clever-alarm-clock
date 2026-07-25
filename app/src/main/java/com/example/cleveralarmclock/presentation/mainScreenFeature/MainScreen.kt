@@ -42,7 +42,7 @@ import com.example.cleveralarmclock.presentation.mainScreenFeature.components.Al
 @Composable
 fun MainScreen(
     modifier: Modifier = Modifier,
-    onAddAlarmClick: () -> Unit,
+    onAddAlarmClick: (Int) -> Unit,
     viewModel: MainViewModel = hiltViewModel(),
 ) {
 
@@ -52,7 +52,7 @@ fun MainScreen(
 
     LaunchedEffect(Unit) {
         viewModel.navigationEvent.collect { alarmId ->
-            onAddAlarmClick()
+            onAddAlarmClick(alarmId)
         }
     }
 
@@ -103,7 +103,7 @@ fun MainScreen(
         floatingActionButton = {
             if(!uiState.isSelectedMode){
                 FloatingActionButton(
-                    onClick = onAddAlarmClick
+                    onClick = { onAddAlarmClick(-1) }
                 ) {
                     Icon(
                         imageVector = Icons.Default.Add,
