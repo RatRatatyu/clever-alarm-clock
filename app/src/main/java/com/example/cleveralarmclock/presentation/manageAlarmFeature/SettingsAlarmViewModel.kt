@@ -1,11 +1,14 @@
 package com.example.cleveralarmclock.presentation.manageAlarmFeature
 
 import android.content.Context
-import androidx.lifecycle.ViewModel
 import android.text.format.DateFormat
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cleveralarmclock.core.data.database.entity.AlarmEntity
 import com.example.cleveralarmclock.core.domain.usecase.AddAlarmUseCase
+import com.example.cleveralarmclock.core.domain.usecase.GetAlarmByIdUseCase
+import com.example.cleveralarmclock.presentation.manageAlarmFeature.util.DataTimeFormatter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,6 +16,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 import java.time.LocalTime
 import javax.inject.Inject
 
@@ -21,48 +25,71 @@ data class SettingAlarmState(
     val selectedHours: Int = 0,
     val selectedMinutes: Int = 0,
     val is24Hours: Boolean = true,
-    val selectedAmPm: String = "AM"
+    val selectedAmPm: String = "AM",
+    val isLoading: Boolean = false,
 )
 
 @HiltViewModel
 class SettingsAlarmViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val addAlarmUseCase: AddAlarmUseCase
+    private val addAlarmUseCase: AddAlarmUseCase,
+    private val getAlarmByIdUseCase: GetAlarmByIdUseCase,
+    private val dataTimeFormatter: DataTimeFormatter,
+    savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SettingAlarmState())
     val uiState: StateFlow<SettingAlarmState> = _uiState.asStateFlow()
 
+    private val alarmId: Int = checkNotNull(savedStateHandle["alarmId"])
+
+
 
     init {
-        initializeTime()
+        if(alarmId != -1){
+            loadAlarm(alarmId)
+        }else {
+            initializeTime()
+        }
     }
 
-    private fun initializeTime() {
-        val is24Hour = DateFormat.is24HourFormat(context)
-        val now = LocalTime.now()
-
-        val selectedMinutes = now.minute
-        var selectedHours = now.hour
-        var selectedAmPm = "AM"
-
-        if (!is24Hour) {
-            val hour12 = now.hour % 12
-            selectedHours = if (hour12 == 0) 12 else hour12
-            selectedAmPm = if (now.hour < 12) "AM" else "PM"
+    private fun loadAlarm(alarmId: Int){
+        _uiState.update {
+            it.copy(
+                isLoading = true
+            )
         }
+        viewModelScope.launch {
+            val alarm = getAlarmByIdUseCase(alarmId)
+            val formater = dataTimeFormatter.convert24To12Hour(alarm?.hours ?: -1)
+
+            _uiState.update {
+                it.copy(
+                    selectedHours = formater.hour,
+                    selectedMinutes = alarm?.minutes ?: LocalTime.now().minute,
+                    selectedAmPm = formater.amPm,
+                    is24Hours = formater.is24Format,
+                    isLoading = false
+                )
+            }
+        }
+    }
+
+
+    private fun initializeTime() {
+        val formater = dataTimeFormatter.convert24To12Hour(-1)
 
         _uiState.update {
             it.copy(
-                selectedHours = selectedHours,
-                selectedMinutes = selectedMinutes,
-                selectedAmPm = selectedAmPm,
-                is24Hours = is24Hour
+                selectedHours = formater.hour,
+                selectedMinutes = LocalTime.now().minute,
+                selectedAmPm = formater.amPm,
+                is24Hours = formater.is24Format
             )
         }
     }
 
-        fun onHoursChange(hours: Int) {
+    fun onHoursChange(hours: Int) {
         _uiState.update {
             it.copy(
                 selectedHours = hours
@@ -88,8 +115,11 @@ class SettingsAlarmViewModel @Inject constructor(
 
     fun onAddAlarmClock() {
         viewModelScope.launch {
+            val formater = dataTimeFormatter.convert12To24Hour(_uiState.value.selectedHours, _uiState.value.selectedAmPm)
+
             addAlarmUseCase(AlarmEntity(
-                hours = _uiState.value.selectedHours,
+                id = if (alarmId == -1) 0 else alarmId,
+                hours = formater,
                 minutes = _uiState.value.selectedMinutes
             ))
         }
