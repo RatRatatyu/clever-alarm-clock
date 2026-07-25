@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -67,15 +68,19 @@ fun SettingsAlarm(
                     .weight(2f),
                 contentAlignment = Alignment.Center
             ) {
-                WheelTimePicker(
-                    is24Hours =  uiState.is24Hours,
-                    selectedHours = uiState.selectedHours,
-                    selectedMinutes = uiState.selectedMinutes,
-                    selectedAmPm = uiState.selectedAmPm,
-                    onHoursChange = { hours -> viewModel.onHoursChange(hours) },
-                    onMinutesChange = { minutes -> viewModel.onMinutesChange(minutes) },
-                    onAmPmChange = { amPm -> viewModel.onAmPmChange(amPm) }
-                )
+                if(uiState.isLoading){
+                    CircularProgressIndicator()
+                }else {
+                    WheelTimePicker(
+                        is24Hours = uiState.is24Hours,
+                        selectedHours = uiState.selectedHours,
+                        selectedMinutes = uiState.selectedMinutes,
+                        selectedAmPm = uiState.selectedAmPm,
+                        onHoursChange = { hours -> viewModel.onHoursChange(hours) },
+                        onMinutesChange = { minutes -> viewModel.onMinutesChange(minutes) },
+                        onAmPmChange = { amPm -> viewModel.onAmPmChange(amPm) }
+                    )
+                }
             }
 
             Box(
