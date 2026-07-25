@@ -27,4 +27,8 @@ interface AlarmDao {
 
     @Query("SELECT * FROM alarmEntity ORDER BY id DESC")
     fun getAllAlarmClock(): Flow<List<AlarmEntity>>
+
+    @Query("SELECT * FROM alarmEntity WHERE id = :id")
+    suspend fun getAlarmById(id: Int): AlarmEntity?
+
 }
