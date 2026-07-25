@@ -2,15 +2,21 @@ package com.example.cleveralarmclock.presentation.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.cleveralarmclock.presentation.mainScreenFeature.MainScreen
 import com.example.cleveralarmclock.presentation.manageAlarmFeature.SettingsAlarm
 
-sealed class AppScreens(val route: String){
-    data object Home: AppScreens("home")
-    data object AlarmSettings: AppScreens("alarmSettings")
+sealed class AppScreens(val route: String) {
+    data object Home : AppScreens("home")
+    data object AlarmSettings : AppScreens("alarmSettings/{alarmId}") {
+        fun passId(alarmId: Int): String {
+            return "alarmSettings/$alarmId"
+        }
+    }
 }
 
 @Composable
@@ -23,12 +29,17 @@ fun AppNavHost(
     ){
         composable(AppScreens.Home.route){
             MainScreen(
-                onAddAlarmClick = {
-                    navController.navigate(AppScreens.AlarmSettings.route)
+                onAddAlarmClick = { alarmId ->
+                    navController.navigate(AppScreens.AlarmSettings.passId(alarmId))
                 }
             )
         }
-        composable(AppScreens.AlarmSettings.route){
+        composable(
+            route = AppScreens.AlarmSettings.route,
+            arguments= listOf(
+                navArgument("alarmId"){type = NavType.IntType}
+            )
+        ){
             SettingsAlarm(
                 onBackClick = {
                     navController.popBackStack()
