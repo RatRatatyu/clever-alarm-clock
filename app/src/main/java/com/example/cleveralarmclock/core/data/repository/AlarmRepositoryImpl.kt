@@ -29,4 +29,8 @@ class AlarmRepositoryImpl @Inject constructor(
     override suspend fun updateAlarm(alarm: AlarmEntity) {
         alarmDao.update(alarm)
     }
+
+    override suspend fun getAlarmById(id: Int): AlarmEntity? {
+        return alarmDao.getAlarmById(id)
+    }
 }
