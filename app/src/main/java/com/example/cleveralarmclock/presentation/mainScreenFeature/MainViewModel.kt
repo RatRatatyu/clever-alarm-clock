@@ -2,8 +2,7 @@ package com.example.cleveralarmclock.presentation.mainScreenFeature
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.room.PrimaryKey
-import com.example.cleveralarmclock.core.data.database.entity.AlarmEntity
+import com.example.cleveralarmclock.core.domain.module.AlarmModel
 import com.example.cleveralarmclock.core.domain.usecase.DeleteAlarmsUseCase
 import com.example.cleveralarmclock.core.domain.usecase.GetAlarmsUseCase
 import com.example.cleveralarmclock.core.domain.usecase.GetNextAlarmTimeUseCase
@@ -35,7 +34,7 @@ data class AlarmUiModel(
     val id: Int,
     val timeFormatted: String,
     val isActivated: Boolean,
-    val origin: AlarmEntity
+    val origin: AlarmModel
 )
 @HiltViewModel
 class MainViewModel @Inject constructor(
@@ -143,7 +142,7 @@ class MainViewModel @Inject constructor(
         _uiState.update { MainState() }
     }
 
-    fun toggleAlarmStatus(alarm: AlarmEntity){
+    fun toggleAlarmStatus(alarm: AlarmModel){
         viewModelScope.launch {
             toggleAlarmUseCase(alarm)
         }
