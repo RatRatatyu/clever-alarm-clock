@@ -1,11 +1,10 @@
 package com.example.cleveralarmclock.presentation.manageAlarmFeature
 
 import android.content.Context
-import android.text.format.DateFormat
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.cleveralarmclock.core.data.database.entity.AlarmEntity
+import com.example.cleveralarmclock.core.domain.module.AlarmModel
 import com.example.cleveralarmclock.core.domain.usecase.AddAlarmUseCase
 import com.example.cleveralarmclock.core.domain.usecase.GetAlarmByIdUseCase
 import com.example.cleveralarmclock.presentation.manageAlarmFeature.util.DataTimeFormatter
@@ -16,7 +15,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.time.LocalDateTime
 import java.time.LocalTime
 import javax.inject.Inject
 
@@ -117,7 +115,7 @@ class SettingsAlarmViewModel @Inject constructor(
         viewModelScope.launch {
             val formater = dataTimeFormatter.convert12To24Hour(_uiState.value.selectedHours, _uiState.value.selectedAmPm)
 
-            addAlarmUseCase(AlarmEntity(
+            addAlarmUseCase(AlarmModel(
                 id = if (alarmId == -1) 0 else alarmId,
                 hours = formater,
                 minutes = _uiState.value.selectedMinutes
