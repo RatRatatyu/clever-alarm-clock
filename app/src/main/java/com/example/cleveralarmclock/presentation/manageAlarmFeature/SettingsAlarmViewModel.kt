@@ -29,7 +29,6 @@ data class SettingAlarmState(
 
 @HiltViewModel
 class SettingsAlarmViewModel @Inject constructor(
-    @ApplicationContext private val context: Context,
     private val addAlarmUseCase: AddAlarmUseCase,
     private val getAlarmByIdUseCase: GetAlarmByIdUseCase,
     private val dataTimeFormatter: DataTimeFormatter,
