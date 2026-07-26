@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
@@ -129,7 +128,7 @@ fun MainScreen(
                     nextAlarmText = nextAlarmText,
                     isSelectedMode = uiState.isSelectedMode,
                     isChecked = uiState.selectedList,
-                    toggleAlarmStatus = {alarmEntity -> viewModel.toggleAlarmStatus(alarmEntity)},
+                    toggleAlarmStatus = {alarmModel -> viewModel.toggleAlarmStatus(alarmModel)},
                     onPress = {alarmEntity -> viewModel.onPress(alarmEntity)},
                     onLongPress = {alarmEntity -> viewModel.onLongPress(alarmEntity)}
                 )
