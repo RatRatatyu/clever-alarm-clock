@@ -24,8 +24,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun CardScheduledAlarm(
     modifier: Modifier = Modifier,
-    hour: String,
-    minute: String,
+    timeText: String,
     isActive: Boolean,
     onChanged: () -> Unit,
     onClick: ()-> Unit,
@@ -68,7 +67,7 @@ fun CardScheduledAlarm(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        "$hour:$minute",
+                        timeText,
                         style = MaterialTheme.typography.headlineLarge
                     )
                 }
