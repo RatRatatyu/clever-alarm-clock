@@ -16,20 +16,20 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.cleveralarmclock.R
 import com.example.cleveralarmclock.core.data.database.entity.AlarmEntity
-import java.util.Locale
 import androidx.compose.ui.platform.LocalLocale
+import com.example.cleveralarmclock.presentation.mainScreenFeature.AlarmUiModel
 
 
 @Composable
 fun AlarmList(
     modifier: Modifier = Modifier,
-    scheduleList: List<AlarmEntity>,
+    scheduleList: List<AlarmUiModel>,
     nextAlarmText: String?,
     isSelectedMode: Boolean,
     isChecked: List<Int>,
     toggleAlarmStatus: (AlarmEntity) -> Unit,
-    onPress: (AlarmEntity) -> Unit,
-    onLongPress: (AlarmEntity) -> Unit,
+    onPress: (Int) -> Unit,
+    onLongPress: (Int) -> Unit,
 ){
 
     Column(
@@ -65,12 +65,11 @@ fun AlarmList(
             ){
                 items(scheduleList, key= {it.id} ){ alarm ->
                     CardScheduledAlarm(
-                        hour = "%02d".format(LocalLocale.current.platformLocale, alarm.hours),
-                        minute = "%02d".format(LocalLocale.current.platformLocale, alarm.minutes),
-                        isActive = alarm.isActivate,
-                        onChanged = {toggleAlarmStatus(alarm)},
-                        onClick = {onPress(alarm)},
-                        onLongClick = {onLongPress(alarm)},
+                        timeText = alarm.timeFormatted,
+                        isActive = alarm.isActivated,
+                        onChanged = {toggleAlarmStatus(alarm.origin)},
+                        onClick = {onPress(alarm.id)},
+                        onLongClick = {onLongPress(alarm.id)},
                         isSelectionMode = isSelectedMode,
                         isChecked = isChecked.contains(alarm.id)
                     )
