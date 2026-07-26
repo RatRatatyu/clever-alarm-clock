@@ -9,7 +9,6 @@ import javax.inject.Inject
 class AddAlarmUseCase @Inject constructor(
     private val alarmRepository: AlarmRepository,
     private val alarmSchedule: AlarmSchedule,
-    private val alarmMapper: AlarmMapper
 ){
     suspend operator fun invoke(alarm: AlarmModel){
 
