@@ -1,13 +1,13 @@
 package com.example.cleveralarmclock.core.domain.repository
 
-import com.example.cleveralarmclock.core.data.database.entity.AlarmEntity
+import com.example.cleveralarmclock.core.domain.module.AlarmModel
 import kotlinx.coroutines.flow.Flow
 
 interface AlarmRepository {
-    fun getAllAlarms(): Flow<List<AlarmEntity>>
-    suspend fun insertAlarm(alarm: AlarmEntity): Long
+    fun getAllAlarms(): Flow<List<AlarmModel>>
+    suspend fun insertAlarm(alarm: AlarmModel): Long
     suspend fun deleteAlarmsByIds(ids: List<Int>)
-    fun  getActiveAlarms(): Flow<List<AlarmEntity>>
-    suspend fun updateAlarm(alarm: AlarmEntity)
-    suspend fun getAlarmById(id:Int): AlarmEntity?
+    fun  getActiveAlarms(): Flow<List<AlarmModel>>
+    suspend fun updateAlarm(alarm: AlarmModel)
+    suspend fun getAlarmById(id:Int): AlarmModel?
 }
