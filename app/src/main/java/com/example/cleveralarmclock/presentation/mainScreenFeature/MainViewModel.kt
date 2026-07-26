@@ -2,12 +2,14 @@ package com.example.cleveralarmclock.presentation.mainScreenFeature
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.room.PrimaryKey
 import com.example.cleveralarmclock.core.data.database.entity.AlarmEntity
 import com.example.cleveralarmclock.core.domain.usecase.DeleteAlarmsUseCase
 import com.example.cleveralarmclock.core.domain.usecase.GetAlarmsUseCase
 import com.example.cleveralarmclock.core.domain.usecase.GetNextAlarmTimeUseCase
 import com.example.cleveralarmclock.core.domain.usecase.ToggleAlarmUseCase
 import com.example.cleveralarmclock.presentation.mainScreenFeature.util.TimeRemainingFormatter
+import com.example.cleveralarmclock.presentation.manageAlarmFeature.util.DataTimeFormatter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,6 +21,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.util.Locale
 import javax.inject.Inject
 
 
@@ -27,13 +30,21 @@ data class MainState(
     val selectedList: List<Int> = listOf(),
     val allSelected: Boolean = false
 )
+
+data class AlarmUiModel(
+    val id: Int,
+    val timeFormatted: String,
+    val isActivated: Boolean,
+    val origin: AlarmEntity
+)
 @HiltViewModel
 class MainViewModel @Inject constructor(
     getAlarmsUseCase: GetAlarmsUseCase,
     private val toggleAlarmUseCase: ToggleAlarmUseCase,
     getNextAlarmTimeUseCase: GetNextAlarmTimeUseCase,
     private val timeRemainingFormatter: TimeRemainingFormatter,
-    private val deleteAlarmsUseCase: DeleteAlarmsUseCase
+    private val deleteAlarmsUseCase: DeleteAlarmsUseCase,
+    private val dataTimeFormatter: DataTimeFormatter
 ): ViewModel() {
 
 
@@ -42,12 +53,31 @@ class MainViewModel @Inject constructor(
     private val _navigationEvent = Channel<Int>()
     val navigationEvent = _navigationEvent.receiveAsFlow()
 
-    val scheduleFlow: StateFlow<List<AlarmEntity>> = getAlarmsUseCase()
+    val scheduleFlow: StateFlow<List<AlarmUiModel>> = getAlarmsUseCase()
+        .map { list ->
+            list.map { alarm ->
+                val formatted = dataTimeFormatter.convert24To12Hour(alarm.hours)
+
+                val timeString = if (formatted.is24Format) {
+                    String.format(Locale.getDefault(), "%02d:%02d", formatted.hour, alarm.minutes)
+                } else {
+                    String.format(Locale.getDefault(), "%02d:%02d %s", formatted.hour, alarm.minutes, formatted.amPm)
+                }
+
+                AlarmUiModel(
+                    id = alarm.id,
+                    timeFormatted = timeString,
+                    isActivated = alarm.isActivate,
+                    origin = alarm
+                )
+            }
+        }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = emptyList()
         )
+
     val nextAlarmTime: StateFlow<String?> = getNextAlarmTimeUseCase()
         .map { timeRemaining ->
             if (timeRemaining == null) {
@@ -67,12 +97,12 @@ class MainViewModel @Inject constructor(
 
 
 
-    fun onPress(alarm: AlarmEntity){
+    fun onPress(alarmId: Int){
         if (_uiState.value.isSelectedMode){
-            onAddAlarmToList(alarm)
+            onAddAlarmToList(alarmId)
         }else{
             viewModelScope.launch {
-                _navigationEvent.send(alarm.id)
+                _navigationEvent.send(alarmId)
             }
         }
     }
@@ -84,10 +114,10 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun onLongPress(alarm: AlarmEntity) {
+    fun onLongPress(alarmId: Int) {
         if (!_uiState.value.isSelectedMode) {
             _uiState.update {
-                it.copy(isSelectedMode = true, selectedList = listOf(alarm.id))
+                it.copy(isSelectedMode = true, selectedList = listOf(alarmId))
             }
         }
     }
@@ -119,12 +149,12 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    private fun onAddAlarmToList(alarm: AlarmEntity){
+    private fun onAddAlarmToList(alarmId: Int){
         _uiState.update { state ->
-            val newSelected = if (state.selectedList.contains(alarm.id)) {
-                state.selectedList - alarm.id
+            val newSelected = if (state.selectedList.contains(alarmId)) {
+                state.selectedList - alarmId
             } else {
-                state.selectedList + alarm.id
+                state.selectedList + alarmId
             }
 
             state.copy(
