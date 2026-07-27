@@ -1,6 +1,16 @@
-# Clever Alarm Clock (Private)
+# Clever Alarm Clock 
 
-© 2026 Margarita Komarinets. All rights reserved.
+> **Project Status:**  WIP
 
-This project is private. The code, idea and technical details are confidential.  
-Copying, distribution or use without written permission from the author is prohibited.
+---
+
+## Tech Stack
+
+* **Architecture:** Clean Architecture + Feature-based package structure
+* **UI:** Jetpack Compose (Material 3)
+* **DI:** Hilt
+* **Database:** Room
+* **Async:** Kotlin Coroutines & Flow
+* **Background Services:** Foreground Services (BroadcastReceiver & AlarmManager)
+* **Permissions:** Notification & Alarm Permission Handling
+
