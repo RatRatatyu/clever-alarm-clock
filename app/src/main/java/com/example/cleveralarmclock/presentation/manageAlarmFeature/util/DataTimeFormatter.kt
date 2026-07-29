@@ -14,7 +14,7 @@ data class ReturnFormat(
 
 
 class DataTimeFormatter @Inject constructor(
-    @ApplicationContext private val context: Context
+    @param:ApplicationContext private val context: Context
 ){
 
 
