@@ -15,7 +15,7 @@ import javax.inject.Singleton
 
 @Singleton
 class AlarmPlayerImpl @Inject constructor(
-    @ApplicationContext private val context: Context
+    @param:ApplicationContext private val context: Context
 ) : AlarmPlayer {
 
     private var exoPlayer: ExoPlayer? = null
