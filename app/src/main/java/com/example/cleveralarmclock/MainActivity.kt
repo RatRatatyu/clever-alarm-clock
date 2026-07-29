@@ -12,6 +12,7 @@ import androidx.compose.runtime.LaunchedEffect
 import com.example.cleveralarmclock.core.ui.permission.PermissionHandler
 import com.example.cleveralarmclock.core.ui.permission.PermissionTypes
 import com.example.cleveralarmclock.presentation.navigation.AppNavHost
+import com.example.cleveralarmclock.ui.theme.CleverAlarmClockTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -47,7 +48,9 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
-            AppNavHost()
+            CleverAlarmClockTheme {
+                AppNavHost()
+            }
         }
     }
 }
