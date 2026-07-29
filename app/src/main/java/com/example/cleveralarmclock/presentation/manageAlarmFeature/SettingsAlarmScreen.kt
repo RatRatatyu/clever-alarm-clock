@@ -26,7 +26,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.cleveralarmclock.presentation.manageAlarmFeature.components.WheelTimePicker
-import androidx.compose.ui.platform.LocalLocale
+import java.util.Locale
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -90,7 +91,7 @@ fun SettingsAlarm(
                 contentAlignment = Alignment.Center
             ){
                 Text(
-                    text = "${"%02d".format(LocalLocale.current.platformLocale, uiState.selectedHours)} : ${"%02d".format(LocalLocale.current.platformLocale,uiState.selectedMinutes)} ${uiState.selectedAmPm}",
+                    text = "${"%02d".format(Locale.getDefault(), uiState.selectedHours)} : ${"%02d".format(Locale.getDefault(), uiState.selectedMinutes)} ${uiState.selectedAmPm}" ,
                     style = MaterialTheme.typography.headlineLarge,
                     color = Color.White
                 )
