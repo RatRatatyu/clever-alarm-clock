@@ -8,7 +8,7 @@ import javax.inject.Inject
 
 
 class TimeRemainingFormatter @Inject constructor(
-    @ApplicationContext private val context: Context
+    @param:ApplicationContext private val context: Context
 ) {
     fun format(hours: Long, minutes: Long): String {
         val res = context.resources
