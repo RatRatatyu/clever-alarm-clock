@@ -25,6 +25,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.CleverAlarmClock">
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            tools:node="remove">
+        </provider>
         <activity
             android:name=".presentation.alarmAlertFeature.AlarmAlertActivity"
             android:exported="false"
@@ -55,6 +60,11 @@
             android:name=".core.service.receivers.AlarmReceiver"
             android:enabled="true"
             android:exported="false" />
+        <receiver android:name=".core.service.receivers.BootReceiver" android:exported="true"><intent-filter>
+            <action android:name="android.intent.action.BOOT_COMPLETED" />
+            <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+        </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
