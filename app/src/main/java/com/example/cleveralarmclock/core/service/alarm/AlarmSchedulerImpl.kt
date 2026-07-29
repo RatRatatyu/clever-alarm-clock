@@ -14,7 +14,7 @@ import java.time.ZoneId
 import javax.inject.Inject
 
 class AlarmScheduleImpl @Inject constructor(
-    @ApplicationContext private val context: Context,
+    @param:ApplicationContext private val context: Context,
 ): AlarmSchedule{
     private val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
 
