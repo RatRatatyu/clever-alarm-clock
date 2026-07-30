@@ -3,7 +3,7 @@ package com.example.cleveralarmclock.presentation.manageAlarmFeature
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.cleveralarmclock.core.domain.module.AlarmModel
+import com.example.cleveralarmclock.core.domain.module.Alarm
 import com.example.cleveralarmclock.core.domain.usecase.AddAlarmUseCase
 import com.example.cleveralarmclock.core.domain.usecase.GetAlarmByIdUseCase
 import com.example.cleveralarmclock.presentation.manageAlarmFeature.util.DataTimeFormatter
@@ -112,7 +112,7 @@ class SettingsAlarmViewModel @Inject constructor(
         viewModelScope.launch {
             val formater = dataTimeFormatter.convert12To24Hour(_uiState.value.selectedHours, _uiState.value.selectedAmPm)
 
-            addAlarmUseCase(AlarmModel(
+            addAlarmUseCase(Alarm(
                 id = if (alarmId == -1) 0 else alarmId,
                 hours = formater,
                 minutes = _uiState.value.selectedMinutes

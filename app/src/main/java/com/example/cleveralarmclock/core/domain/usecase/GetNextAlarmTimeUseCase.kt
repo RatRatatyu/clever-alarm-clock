@@ -1,7 +1,7 @@
 package com.example.cleveralarmclock.core.domain.usecase
 
 import com.example.cleveralarmclock.core.domain.repository.AlarmRepository
-import com.example.cleveralarmclock.core.domain.module.AlarmModel
+import com.example.cleveralarmclock.core.domain.module.Alarm
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import java.time.Duration
@@ -34,7 +34,7 @@ class GetNextAlarmTimeUseCase @Inject constructor(
             )
         }
     }
-    private fun calculateNextDateTime(alarm: AlarmModel, now: LocalDateTime): LocalDateTime {
+    private fun calculateNextDateTime(alarm: Alarm, now: LocalDateTime): LocalDateTime {
         var alarmDateTime = now
             .withHour(alarm.hours)
             .withMinute(alarm.minutes)

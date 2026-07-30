@@ -2,7 +2,7 @@ package com.example.cleveralarmclock.core.domain.usecase
 
 import com.example.cleveralarmclock.core.domain.repository.AlarmRepository
 import com.example.cleveralarmclock.core.domain.alarm.AlarmSchedule
-import com.example.cleveralarmclock.core.domain.module.AlarmModel
+import com.example.cleveralarmclock.core.domain.module.Alarm
 import javax.inject.Inject
 
 class ToggleAlarmUseCase @Inject constructor(
@@ -10,7 +10,7 @@ class ToggleAlarmUseCase @Inject constructor(
     private val alarmSchedule: AlarmSchedule
 ) {
 
-    suspend operator fun invoke(alarm: AlarmModel){
+    suspend operator fun invoke(alarm: Alarm){
 
         val updatedAlarm = alarm.copy(isActivate = !alarm.isActivate)
         alarmRepository.updateAlarm(updatedAlarm)

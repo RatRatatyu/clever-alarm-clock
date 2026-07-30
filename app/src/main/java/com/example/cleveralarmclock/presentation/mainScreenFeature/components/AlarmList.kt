@@ -15,7 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.cleveralarmclock.R
-import com.example.cleveralarmclock.core.domain.module.AlarmModel
+import com.example.cleveralarmclock.core.domain.module.Alarm
 import com.example.cleveralarmclock.presentation.mainScreenFeature.AlarmUiModel
 
 
@@ -26,7 +26,7 @@ fun AlarmList(
     nextAlarmText: String?,
     isSelectedMode: Boolean,
     isChecked: List<Int>,
-    toggleAlarmStatus: (AlarmModel) -> Unit,
+    toggleAlarmStatus: (Alarm) -> Unit,
     onPress: (Int) -> Unit,
     onLongPress: (Int) -> Unit,
 ){
