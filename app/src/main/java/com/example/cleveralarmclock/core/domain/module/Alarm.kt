@@ -1,6 +1,6 @@
 package com.example.cleveralarmclock.core.domain.module
 
-data class AlarmModel (
+data class Alarm (
     val id: Int = 0,
     val hours: Int,
     val minutes: Int,
