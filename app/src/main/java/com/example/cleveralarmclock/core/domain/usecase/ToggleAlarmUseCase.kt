@@ -19,6 +19,7 @@ class ToggleAlarmUseCase @Inject constructor(
             alarmSchedule.schedule(
                 updatedAlarm.hours,
                 updatedAlarm.minutes,
+                updatedAlarm.repeatDays,
                 id = updatedAlarm.id)
         } else {
             alarmSchedule.cancel(alarm.id)
