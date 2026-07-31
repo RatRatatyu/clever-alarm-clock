@@ -1,9 +1,13 @@
 package com.example.cleveralarmclock.core.domain.module
 
+import java.time.DayOfWeek
+
 data class Alarm (
     val id: Int = 0,
     val hours: Int,
     val minutes: Int,
-    val colorHex: String = "#FF0000", // for testing, later will be changed to tasks id
+    val taskId: Int,
+    val repeatDays: Set<DayOfWeek>,
+    val isRepeated: Boolean = true,
     val isActivate: Boolean = true
 )
