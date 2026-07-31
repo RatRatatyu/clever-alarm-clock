@@ -2,6 +2,7 @@ package com.example.cleveralarmclock.core.domain.usecase
 
 import com.example.cleveralarmclock.core.domain.repository.AlarmRepository
 import com.example.cleveralarmclock.core.domain.module.Alarm
+import com.example.cleveralarmclock.core.domain.util.AlarmTimeCalculator
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import java.time.Duration
@@ -24,7 +25,9 @@ class GetNextAlarmTimeUseCase @Inject constructor(
             val now = LocalDateTime.now()
 
             val nextAlarmDateTime =
-                activeAlarms.minOfOrNull { alarm -> calculateNextDateTime(alarm, now) } ?: return@map null
+                activeAlarms.minOfOrNull { alarm ->
+                    AlarmTimeCalculator.calculateNextTriggerTime(alarm.hours, alarm.minutes, alarm.repeatDays) }
+                    ?: return@map null
 
             val duration = Duration.between(now, nextAlarmDateTime)
 
@@ -33,19 +36,6 @@ class GetNextAlarmTimeUseCase @Inject constructor(
                 minutes = duration.toMinutes() % 60
             )
         }
-    }
-    private fun calculateNextDateTime(alarm: Alarm, now: LocalDateTime): LocalDateTime {
-        var alarmDateTime = now
-            .withHour(alarm.hours)
-            .withMinute(alarm.minutes)
-            .withSecond(0)
-            .withNano(0)
-
-        if (alarmDateTime.isBefore(now) || alarmDateTime.isEqual(now)) {
-            alarmDateTime = alarmDateTime.plusDays(1)
-        }
-
-        return alarmDateTime
     }
 }
 
