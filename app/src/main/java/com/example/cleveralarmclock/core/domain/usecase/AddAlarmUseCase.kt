@@ -16,6 +16,7 @@ class AddAlarmUseCase @Inject constructor(
         alarmSchedule.schedule(
             hour = alarm.hours,
             minute = alarm.minutes,
+            repeatDays = alarm.repeatDays,
             id = alarmId.toInt()
         )
     }
