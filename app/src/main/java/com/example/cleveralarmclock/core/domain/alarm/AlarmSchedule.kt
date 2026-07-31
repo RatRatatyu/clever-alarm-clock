@@ -1,6 +1,8 @@
 package com.example.cleveralarmclock.core.domain.alarm
 
+import java.time.DayOfWeek
+
 interface AlarmSchedule{
-    fun schedule(hour: Int, minute: Int, id: Int){}
+    fun schedule(hour: Int, minute: Int, repeatDays: Set<DayOfWeek>, id: Int){}
     fun cancel(id: Int){}
 }
