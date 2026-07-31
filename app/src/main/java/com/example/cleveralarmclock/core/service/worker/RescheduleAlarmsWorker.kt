@@ -29,6 +29,7 @@ class RescheduleAlarmsWorker @AssistedInject constructor(
                 alarmSchedule.schedule(
                     id = alarm.id,
                     hour = alarm.hours,
+                    repeatDays =  alarm.repeatDays,
                     minute = alarm.minutes
                 )
             }
