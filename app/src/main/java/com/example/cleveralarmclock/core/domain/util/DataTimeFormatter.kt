@@ -1,4 +1,4 @@
-package com.example.cleveralarmclock.presentation.manageAlarmFeature.util
+package com.example.cleveralarmclock.core.domain.util
 
 import android.content.Context
 import android.text.format.DateFormat
@@ -16,8 +16,6 @@ data class ReturnFormat(
 class DataTimeFormatter @Inject constructor(
     @param:ApplicationContext private val context: Context
 ){
-
-
     fun convert24To12Hour(hour24: Int): ReturnFormat{
         val is24Hour = DateFormat.is24HourFormat(context)
 
