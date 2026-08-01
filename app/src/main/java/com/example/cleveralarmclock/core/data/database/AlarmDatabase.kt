@@ -22,7 +22,9 @@ abstract class AlarmDatabase: RoomDatabase() {
                Room.databaseBuilder(
                    context.applicationContext,
                    AlarmDatabase::class.java,
-                   "alarm_database")
+                   "alarm_database"
+               )
+                   .fallbackToDestructiveMigration(true)
                     .build()
                     .also { Instance = it }
             }
