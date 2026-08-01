@@ -1,5 +1,6 @@
 package com.example.cleveralarmclock.presentation.manageAlarmFeature
 
+import android.content.res.Resources
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,12 +22,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.cleveralarmclock.presentation.manageAlarmFeature.components.DayOfWeekPicker
 import com.example.cleveralarmclock.presentation.manageAlarmFeature.components.WheelTimePicker
-import java.util.Locale
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -82,37 +82,34 @@ fun SettingsAlarm(
                     )
                 }
             }
-
             Box(
-                modifier = Modifier
+                Modifier
                     .fillMaxWidth()
-                    .weight(3f)
-                    .background(color = Color.Red),
+                    .padding(30.dp)
+                    .background(color = MaterialTheme.colorScheme.background)
+                    .weight(1f),
                 contentAlignment = Alignment.Center
             ){
-                Text(
-                    text = "${"%02d".format(Locale.getDefault(), uiState.selectedHours)} : ${"%02d".format(Locale.getDefault(), uiState.selectedMinutes)} ${uiState.selectedAmPm}" ,
-                    style = MaterialTheme.typography.headlineLarge,
-                    color = Color.White
+                DayOfWeekPicker(
+                    isAlDaysSelected =uiState.isAllDaysSelected,
+                    selectedDayOfWeek =  uiState.selectedDayOfWeek,
+                    selectAllDayOfWeek = { viewModel.selectAllDayOfWeek() },
+                    onSelectDayOfWeek = {day -> viewModel.onSelectDayOfWeek(day)}
                 )
             }
-            Button(
-                onClick = {
+
+            Box(Modifier
+                .fillMaxWidth()
+                .weight(3f),
+                contentAlignment = Alignment.Center
+            ){
+                Button({
                     viewModel.onAddAlarmClock()
                     onBackClick()
-                }
-            ) {
-                Text("Add")
+                }) {Text("add") }
             }
+
+
         }
-    }
-}
-
-
-@Preview (showSystemUi = true)
-@Composable
-private fun SettingsAlarmPrev() {
-    MaterialTheme {
-        SettingsAlarm(onBackClick = {})
     }
 }
