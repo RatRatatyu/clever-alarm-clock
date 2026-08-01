@@ -8,7 +8,7 @@ import com.example.cleveralarmclock.core.domain.usecase.GetAlarmsUseCase
 import com.example.cleveralarmclock.core.domain.usecase.GetNextAlarmTimeUseCase
 import com.example.cleveralarmclock.core.domain.usecase.ToggleAlarmUseCase
 import com.example.cleveralarmclock.presentation.mainScreenFeature.util.TimeRemainingFormatter
-import com.example.cleveralarmclock.presentation.manageAlarmFeature.util.DataTimeFormatter
+import com.example.cleveralarmclock.core.domain.util.DataTimeFormatter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,6 +20,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.DayOfWeek
 import java.util.Locale
 import javax.inject.Inject
 
@@ -34,6 +35,7 @@ data class AlarmUiModel(
     val id: Int,
     val timeFormatted: String,
     val isActivated: Boolean,
+    val repeatedDays: Set<DayOfWeek>,
     val origin: Alarm
 )
 @HiltViewModel
@@ -67,6 +69,7 @@ class MainViewModel @Inject constructor(
                     id = alarm.id,
                     timeFormatted = timeString,
                     isActivated = alarm.isActivate,
+                    repeatedDays = alarm.repeatDays,
                     origin = alarm
                 )
             }
