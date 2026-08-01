@@ -66,6 +66,7 @@ fun AlarmList(
                     CardScheduledAlarm(
                         timeText = alarm.timeFormatted,
                         isActive = alarm.isActivated,
+                        selectedDaysOfWeek = alarm.repeatedDays,
                         onChanged = {toggleAlarmStatus(alarm.origin)},
                         onClick = {onPress(alarm.id)},
                         onLongClick = {onLongPress(alarm.id)},
