@@ -31,8 +31,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.cleveralarmclock.R
+import com.example.cleveralarmclock.core.domain.module.Alarm
 import com.example.cleveralarmclock.presentation.mainScreenFeature.components.AlarmList
 
 
@@ -54,6 +54,40 @@ fun MainScreen(
         }
     }
 
+    MainScreenContent(
+        modifier = modifier,
+        scheduleList = scheduleList,
+        nextAlarmText = nextAlarmText,
+        uiState = uiState,
+        onAddAlarmClick = onAddAlarmClick,
+        clearSelection = { viewModel.clearSelection() },
+        getAllChecked = { viewModel.getAllChecked() },
+        deleteAlarms = { viewModel.deleteAlarms() },
+        toggleAlarmStatus = { viewModel.toggleAlarmStatus(it) },
+        onPress = { viewModel.onPress(it) },
+        onLongPress = { viewModel.onLongPress(it) }
+    )
+
+
+}
+
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun MainScreenContent(
+    modifier: Modifier = Modifier,
+    scheduleList: List<AlarmUiModel>,
+    nextAlarmText: String?,
+    uiState: MainState,
+    onAddAlarmClick: (Int) -> Unit,
+    clearSelection: () -> Unit,
+    getAllChecked: () -> Unit,
+    deleteAlarms: () -> Unit,
+    toggleAlarmStatus: (Alarm) -> Unit,
+    onPress: (Int) -> Unit,
+    onLongPress: (Int) -> Unit
+){
     Scaffold(
         modifier = modifier
             .fillMaxSize(),
@@ -62,12 +96,12 @@ fun MainScreen(
                 TopAppBar(
                     title = {},
                     navigationIcon = {
-                        IconButton(onClick = { viewModel.clearSelection() }) {
+                        IconButton(onClick = { clearSelection() }) {
                             Icon(Icons.Default.Close, contentDescription = stringResource(R.string.cancel))
                         }
                     },
                     actions = {
-                        IconButton(onClick = { viewModel.getAllChecked() }) {
+                        IconButton(onClick = { getAllChecked() }) {
                             Icon(Icons.Default.Check, contentDescription = stringResource(R.string.select_all))
                         }
                     }
@@ -80,7 +114,7 @@ fun MainScreen(
                     Spacer(modifier = Modifier.weight(1f))
 
                     FilledIconButton(
-                        onClick = { viewModel.deleteAlarms() },
+                        onClick = { deleteAlarms() },
                         modifier = Modifier.size(56.dp),
                         colors = IconButtonDefaults.filledIconButtonColors(
                             containerColor = MaterialTheme.colorScheme.errorContainer,
@@ -128,23 +162,33 @@ fun MainScreen(
                     nextAlarmText = nextAlarmText,
                     isSelectedMode = uiState.isSelectedMode,
                     isChecked = uiState.selectedList,
-                    toggleAlarmStatus = {alarmModel -> viewModel.toggleAlarmStatus(alarmModel)},
-                    onPress = {alarmEntity -> viewModel.onPress(alarmEntity)},
-                    onLongPress = {alarmEntity -> viewModel.onLongPress(alarmEntity)}
+                    toggleAlarmStatus = {alarmModel -> toggleAlarmStatus(alarmModel)},
+                    onPress = {alarmEntity -> onPress(alarmEntity)},
+                    onLongPress = {alarmEntity -> onLongPress(alarmEntity)}
                 )
             }
         }
     }
 }
 
-
 @Preview(showSystemUi = true)
 @Composable
-fun MainScreenPrev(){
-    MaterialTheme{
-        MainScreen(
+fun MainScreenPrev() {
+    MaterialTheme {
+        MainScreenContent(
+            scheduleList = emptyList(),
+            nextAlarmText = "Прозвенит через 8 ч 30 мин",
+            uiState = MainState(
+                isSelectedMode = false,
+                selectedList = emptyList()
+            ),
             onAddAlarmClick = {},
-            viewModel = viewModel()
+            clearSelection = {},
+            getAllChecked = {},
+            deleteAlarms = {},
+            toggleAlarmStatus = {},
+            onPress = {},
+            onLongPress = {}
         )
     }
 }
