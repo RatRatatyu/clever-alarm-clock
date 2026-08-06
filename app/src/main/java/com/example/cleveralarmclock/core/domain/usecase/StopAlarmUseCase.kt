@@ -31,7 +31,7 @@ class StopAlarmUseCase @Inject constructor(
                 alarm.id)
 
         }else{
-            toggleAlarmUseCase(alarm)
+            toggleAlarmUseCase(alarm.id)
         }
         Log.i("ALARM_DEBUDING", "repited alarm set ")
 
