@@ -2,13 +2,12 @@ package com.example.cleveralarmclock.presentation.mainScreenFeature
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.cleveralarmclock.core.domain.module.Alarm
 import com.example.cleveralarmclock.core.domain.usecase.DeleteAlarmsUseCase
 import com.example.cleveralarmclock.core.domain.usecase.GetAlarmsUseCase
 import com.example.cleveralarmclock.core.domain.usecase.GetNextAlarmTimeUseCase
 import com.example.cleveralarmclock.core.domain.usecase.ToggleAlarmUseCase
-import com.example.cleveralarmclock.presentation.mainScreenFeature.util.TimeRemainingFormatter
 import com.example.cleveralarmclock.core.domain.util.DataTimeFormatter
+import com.example.cleveralarmclock.presentation.mainScreenFeature.util.TimeRemainingFormatter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -35,8 +34,7 @@ data class AlarmUiModel(
     val id: Int,
     val timeFormatted: String,
     val isActivated: Boolean,
-    val repeatedDays: Set<DayOfWeek>,
-    val origin: Alarm
+    val repeatedDays: Set<DayOfWeek>
 )
 @HiltViewModel
 class MainViewModel @Inject constructor(
@@ -70,7 +68,6 @@ class MainViewModel @Inject constructor(
                     timeFormatted = timeString,
                     isActivated = alarm.isActivate,
                     repeatedDays = alarm.repeatDays,
-                    origin = alarm
                 )
             }
         }
@@ -145,9 +142,9 @@ class MainViewModel @Inject constructor(
         _uiState.update { MainState() }
     }
 
-    fun toggleAlarmStatus(alarm: Alarm){
+    fun toggleAlarmStatus(alarmId: Int){
         viewModelScope.launch {
-            toggleAlarmUseCase(alarm)
+            toggleAlarmUseCase(alarmId)
         }
     }
 
