@@ -32,7 +32,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.cleveralarmclock.R
-import com.example.cleveralarmclock.core.domain.module.Alarm
 import com.example.cleveralarmclock.presentation.mainScreenFeature.components.AlarmList
 
 
@@ -84,7 +83,7 @@ fun MainScreenContent(
     clearSelection: () -> Unit,
     getAllChecked: () -> Unit,
     deleteAlarms: () -> Unit,
-    toggleAlarmStatus: (Alarm) -> Unit,
+    toggleAlarmStatus: (Int) -> Unit,
     onPress: (Int) -> Unit,
     onLongPress: (Int) -> Unit
 ){
@@ -162,9 +161,9 @@ fun MainScreenContent(
                     nextAlarmText = nextAlarmText,
                     isSelectedMode = uiState.isSelectedMode,
                     isChecked = uiState.selectedList,
-                    toggleAlarmStatus = {alarmModel -> toggleAlarmStatus(alarmModel)},
-                    onPress = {alarmEntity -> onPress(alarmEntity)},
-                    onLongPress = {alarmEntity -> onLongPress(alarmEntity)}
+                    toggleAlarmStatus = {alarmId -> toggleAlarmStatus(alarmId)},
+                    onPress = {alarmId -> onPress(alarmId)},
+                    onLongPress = {alarmId -> onLongPress(alarmId)}
                 )
             }
         }
