@@ -7,10 +7,13 @@ import javax.inject.Inject
 
 class ToggleAlarmUseCase @Inject constructor(
     private val alarmRepository: AlarmRepository,
+    private val getAlarmByIdUseCase: GetAlarmByIdUseCase,
     private val alarmSchedule: AlarmSchedule
 ) {
 
-    suspend operator fun invoke(alarm: Alarm){
+    suspend operator fun invoke(alarmId: Int){
+
+        val alarm = getAlarmByIdUseCase(alarmId) ?: return
 
         val updatedAlarm = alarm.copy(isActivate = !alarm.isActivate)
         alarmRepository.updateAlarm(updatedAlarm)
@@ -22,7 +25,7 @@ class ToggleAlarmUseCase @Inject constructor(
                 updatedAlarm.repeatDays,
                 id = updatedAlarm.id)
         } else {
-            alarmSchedule.cancel(alarm.id)
+            alarmSchedule.cancel(alarmId)
         }
     }
 }
