@@ -27,12 +27,15 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Devices.PHONE
+import androidx.compose.ui.tooling.preview.Devices.TABLET
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.cleveralarmclock.R
 import com.example.cleveralarmclock.presentation.mainScreenFeature.components.AlarmList
+import java.time.DayOfWeek
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -170,16 +173,23 @@ fun MainScreenContent(
     }
 }
 
-@Preview(showSystemUi = true)
+@Preview(showSystemUi = true, device = TABLET)
+@Preview(showSystemUi = true, device = PHONE)
 @Composable
 fun MainScreenPrev() {
+
+    val previewAlarms = listOf(
+        AlarmUiModel(id = 1, timeFormatted = "07:00", isActivated =  true,  repeatedDays = setOf(
+            DayOfWeek.WEDNESDAY, DayOfWeek.MONDAY)),
+        AlarmUiModel(id = 2, timeFormatted = "09:30", isActivated = false, repeatedDays = setOf())
+    )
     MaterialTheme {
         MainScreenContent(
-            scheduleList = emptyList(),
+            scheduleList = previewAlarms,
             nextAlarmText = "Прозвенит через 8 ч 30 мин",
             uiState = MainState(
                 isSelectedMode = false,
-                selectedList = emptyList()
+                selectedList = listOf(1)
             ),
             onAddAlarmClick = {},
             clearSelection = {},
