@@ -38,7 +38,7 @@ import com.example.cleveralarmclock.presentation.mainScreenFeature.components.Al
 import java.time.DayOfWeek
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 fun MainScreen(
     modifier: Modifier = Modifier,
@@ -56,7 +56,7 @@ fun MainScreen(
         }
     }
 
-    MainScreenContent(
+    MainScreenCompact(
         modifier = modifier,
         scheduleList = scheduleList,
         nextAlarmText = nextAlarmText,
@@ -74,10 +74,8 @@ fun MainScreen(
 }
 
 
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreenContent(
+fun MainScreenCompact(
     modifier: Modifier = Modifier,
     scheduleList: List<AlarmUiModel>,
     nextAlarmText: String?,
@@ -95,55 +93,20 @@ fun MainScreenContent(
             .fillMaxSize(),
         topBar = {
             if (uiState.isSelectedMode) {
-                TopAppBar(
-                    title = {},
-                    navigationIcon = {
-                        IconButton(onClick = { clearSelection() }) {
-                            Icon(Icons.Default.Close, contentDescription = stringResource(R.string.cancel))
-                        }
-                    },
-                    actions = {
-                        IconButton(onClick = { getAllChecked() }) {
-                            Icon(Icons.Default.Check, contentDescription = stringResource(R.string.select_all))
-                        }
-                    }
+                TopAppBarComponent(
+                    clearSelection = clearSelection,
+                    getAllChecked = getAllChecked
                 )
             }
         },
         bottomBar = {
             if(uiState.isSelectedMode){
-                BottomAppBar {
-                    Spacer(modifier = Modifier.weight(1f))
-
-                    FilledIconButton(
-                        onClick = { deleteAlarms() },
-                        modifier = Modifier.size(56.dp),
-                        colors = IconButtonDefaults.filledIconButtonColors(
-                            containerColor = MaterialTheme.colorScheme.errorContainer,
-                            contentColor = MaterialTheme.colorScheme.error
-                        )
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Delete,
-                            contentDescription = stringResource(R.string.delete),
-                            modifier = Modifier.size(28.dp)
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.weight(1f))
-                }
+                BottomBarComponent ( deleteAlarms = deleteAlarms )
             }
         },
         floatingActionButton = {
             if(!uiState.isSelectedMode){
-                FloatingActionButton(
-                    onClick = { onAddAlarmClick(-1) }
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Add,
-                        contentDescription = "Add alarm clock"
-                    )
-                }
+                FloatingActionButtonComponent (onAddAlarmClick = onAddAlarmClick)
             }
         }
     ) { innerPadding ->
@@ -173,6 +136,66 @@ fun MainScreenContent(
     }
 }
 
+@Composable
+fun FloatingActionButtonComponent(
+    onAddAlarmClick: (Int) -> Unit
+){
+    FloatingActionButton(
+        onClick = { onAddAlarmClick(-1) }
+    ) {
+        Icon(
+            imageVector = Icons.Default.Add,
+            contentDescription = "Add alarm clock"
+        )
+    }
+}
+@Composable
+fun BottomBarComponent(
+    deleteAlarms: () -> Unit
+){
+    BottomAppBar {
+        Spacer(modifier = Modifier.weight(1f))
+
+        FilledIconButton(
+            onClick = { deleteAlarms() },
+            modifier = Modifier.size(56.dp),
+            colors = IconButtonDefaults.filledIconButtonColors(
+                containerColor = MaterialTheme.colorScheme.errorContainer,
+                contentColor = MaterialTheme.colorScheme.error
+            )
+        ) {
+            Icon(
+                imageVector = Icons.Default.Delete,
+                contentDescription = stringResource(R.string.delete),
+                modifier = Modifier.size(28.dp)
+            )
+        }
+
+        Spacer(modifier = Modifier.weight(1f))
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TopAppBarComponent(
+    clearSelection: () -> Unit,
+    getAllChecked: () -> Unit
+){
+    TopAppBar(
+        title = {},
+        navigationIcon = {
+            IconButton(onClick = { clearSelection() }) {
+                Icon(Icons.Default.Close, contentDescription = stringResource(R.string.cancel))
+            }
+        },
+        actions = {
+            IconButton(onClick = { getAllChecked() }) {
+                Icon(Icons.Default.Check, contentDescription = stringResource(R.string.select_all))
+            }
+        }
+    )
+}
+
 @Preview(showSystemUi = true, device = TABLET)
 @Preview(showSystemUi = true, device = PHONE)
 @Composable
@@ -184,7 +207,7 @@ fun MainScreenPrev() {
         AlarmUiModel(id = 2, timeFormatted = "09:30", isActivated = false, repeatedDays = setOf())
     )
     MaterialTheme {
-        MainScreenContent(
+        MainScreenCompact(
             scheduleList = previewAlarms,
             nextAlarmText = "Прозвенит через 8 ч 30 мин",
             uiState = MainState(
