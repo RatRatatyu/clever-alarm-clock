@@ -1,5 +1,6 @@
 package com.example.cleveralarmclock.presentation.navigation
 
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -21,7 +22,8 @@ sealed class AppScreens(val route: String) {
 
 @Composable
 fun AppNavHost(
-    navController: NavHostController = rememberNavController()
+    navController: NavHostController = rememberNavController(),
+    windowSizeClass: WindowSizeClass
 ){
     NavHost(
         navController = navController,
@@ -31,7 +33,8 @@ fun AppNavHost(
             MainScreen(
                 onAddAlarmClick = { alarmId ->
                     navController.navigate(AppScreens.AlarmSettings.passId(alarmId))
-                }
+                },
+                windowSizeClass = windowSizeClass
             )
         }
         composable(
@@ -43,7 +46,8 @@ fun AppNavHost(
             SettingsAlarm(
                 onBackClick = {
                     navController.popBackStack()
-                }
+                },
+                windowSizeClass = windowSizeClass
             )
         }
     }
