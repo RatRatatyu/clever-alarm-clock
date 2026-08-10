@@ -8,6 +8,8 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.LaunchedEffect
 import com.example.cleveralarmclock.core.ui.permission.PermissionHandler
 import com.example.cleveralarmclock.core.ui.permission.PermissionTypes
@@ -21,6 +23,7 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var permissionHandler: PermissionHandler
 
+    @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -47,9 +50,10 @@ class MainActivity : ComponentActivity() {
                     }
                 }
             }
+            val windowSizeClass = calculateWindowSizeClass(this)
 
             CleverAlarmClockTheme {
-                AppNavHost()
+                AppNavHost(windowSizeClass = windowSizeClass)
             }
         }
     }
