@@ -1,6 +1,5 @@
 package com.example.cleveralarmclock.presentation.manageAlarmFeature
 
-import android.content.res.Resources
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,15 +18,19 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.cleveralarmclock.presentation.manageAlarmFeature.components.DayOfWeekPicker
 import com.example.cleveralarmclock.presentation.manageAlarmFeature.components.WheelTimePicker
+import java.time.DayOfWeek
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -41,7 +44,36 @@ fun SettingsAlarm(
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
+    when(windowSizeClass.widthSizeClass){
+        WindowWidthSizeClass.Compact -> SettingsAlarmCompact(
+            modifier = modifier,
+            uiState = uiState,
+            onBackClick = onBackClick,
+            onHoursChange = {hour -> viewModel.onHoursChange(hour) },
+            onMinutesChange = {minute -> viewModel.onMinutesChange(minute) },
+            onAmPmChange = {amPm -> viewModel.onAmPmChange(amPm) },
+            selectAllDayOfWeek = { viewModel.selectAllDayOfWeek() },
+            onSelectDayOfWeek = {dayOfWeek -> viewModel.onSelectDayOfWeek(dayOfWeek)},
+            onAddAlarmClock = { viewModel.onAddAlarmClock() }
+        )
 
+    }
+
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SettingsAlarmCompact(
+    modifier: Modifier = Modifier,
+    uiState: SettingAlarmState,
+    onBackClick: () -> Unit,
+    onHoursChange: (Int) -> Unit,
+    onMinutesChange: (Int) -> Unit,
+    onAmPmChange: (String) -> Unit,
+    selectAllDayOfWeek: () -> Unit,
+    onSelectDayOfWeek: (DayOfWeek) -> Unit,
+    onAddAlarmClock: () -> Unit
+){
     Scaffold (
         modifier = modifier.fillMaxSize(),
         topBar = {
@@ -78,9 +110,9 @@ fun SettingsAlarm(
                         selectedHours = uiState.selectedHours,
                         selectedMinutes = uiState.selectedMinutes,
                         selectedAmPm = uiState.selectedAmPm,
-                        onHoursChange = { hours -> viewModel.onHoursChange(hours) },
-                        onMinutesChange = { minutes -> viewModel.onMinutesChange(minutes) },
-                        onAmPmChange = { amPm -> viewModel.onAmPmChange(amPm) }
+                        onHoursChange = { hours -> onHoursChange(hours) },
+                        onMinutesChange = { minutes -> onMinutesChange(minutes) },
+                        onAmPmChange = { amPm -> onAmPmChange(amPm) }
                     )
                 }
             }
@@ -93,10 +125,10 @@ fun SettingsAlarm(
                 contentAlignment = Alignment.Center
             ){
                 DayOfWeekPicker(
-                    isAlDaysSelected =uiState.isAllDaysSelected,
-                    selectedDayOfWeek =  uiState.selectedDayOfWeek,
-                    selectAllDayOfWeek = { viewModel.selectAllDayOfWeek() },
-                    onSelectDayOfWeek = {day -> viewModel.onSelectDayOfWeek(day)}
+                    isAlDaysSelected = uiState.isAllDaysSelected,
+                    selectedDayOfWeek = uiState.selectedDayOfWeek,
+                    selectAllDayOfWeek = { selectAllDayOfWeek() },
+                    onSelectDayOfWeek = {day -> onSelectDayOfWeek(day)}
                 )
             }
 
@@ -106,12 +138,33 @@ fun SettingsAlarm(
                 contentAlignment = Alignment.Center
             ){
                 Button({
-                    viewModel.onAddAlarmClock()
+                    onAddAlarmClock()
                     onBackClick()
                 }) {Text("add") }
             }
 
 
         }
+    }
+}
+
+
+@Preview
+@Composable
+fun SettingsAlarmPreview(){
+    MaterialTheme{
+        SettingsAlarmCompact(
+            uiState = SettingAlarmState(
+                selectedHours = 13,
+                selectedMinutes = 0,
+            ),
+            onBackClick = {},
+            onHoursChange = {},
+            onMinutesChange = {},
+            onAmPmChange = {},
+            selectAllDayOfWeek = {},
+            onSelectDayOfWeek = {},
+            onAddAlarmClock = {}
+        )
     }
 }
