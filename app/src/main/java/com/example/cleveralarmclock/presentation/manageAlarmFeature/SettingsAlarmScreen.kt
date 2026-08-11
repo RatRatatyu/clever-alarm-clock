@@ -23,6 +23,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Devices.PHONE
+import androidx.compose.ui.tooling.preview.Devices.TABLET
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -148,15 +150,15 @@ fun SettingsAlarmCompact(
     }
 }
 
-
-@Preview
+@Preview(showSystemUi = true, device = TABLET)
+@Preview(showSystemUi = true, device = PHONE)
 @Composable
 fun SettingsAlarmPreview(){
     MaterialTheme{
         SettingsAlarmCompact(
             uiState = SettingAlarmState(
                 selectedHours = 13,
-                selectedMinutes = 0,
+                selectedMinutes = 9,
             ),
             onBackClick = {},
             onHoursChange = {},
