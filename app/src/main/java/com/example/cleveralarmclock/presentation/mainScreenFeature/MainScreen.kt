@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
@@ -25,6 +26,7 @@ import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarState
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
@@ -174,8 +176,10 @@ fun MainScreenExpanded(
                     FilledIconButton(
                         onClick = { onAddAlarmClick(-1) },
                         modifier = Modifier.size(56.dp),
+                        shape = RoundedCornerShape(16.dp),
                         colors = IconButtonDefaults.filledIconButtonColors(
-                            containerColor = MaterialTheme.colorScheme.primary
+                            containerColor = MaterialTheme.colorScheme.primaryContainer,
+                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
                         )
                     ) {
                         Icon(
@@ -260,7 +264,8 @@ fun FloatingActionButtonComponent(
     onAddAlarmClick: (Int) -> Unit
 ){
     FloatingActionButton(
-        onClick = { onAddAlarmClick(-1) }
+        onClick = { onAddAlarmClick(-1) },
+        shape = RoundedCornerShape(16.dp)
     ) {
         Icon(
             imageVector = Icons.Default.Add,
@@ -315,7 +320,6 @@ fun TopAppBarComponent(
     )
 }
 
-@Preview(showSystemUi = true, device = TABLET)
 @Preview(showSystemUi = true, device = PHONE)
 @Composable
 fun MainScreenPrev() {
@@ -327,6 +331,35 @@ fun MainScreenPrev() {
     )
     MaterialTheme {
         MainScreenCompact(
+            scheduleList = previewAlarms,
+            nextAlarmText = "Прозвенит через 8 ч 30 мин",
+            uiState = MainState(
+                isSelectedMode = false,
+                selectedList = listOf(1)
+            ),
+            onAddAlarmClick = {},
+            clearSelection = {},
+            getAllChecked = {},
+            deleteAlarms = {},
+            toggleAlarmStatus = {},
+            onPress = {},
+            onLongPress = {}
+        )
+    }
+}
+
+
+@Preview(showSystemUi = true, device = TABLET)
+@Composable
+fun MainScreenPrevTablet() {
+
+    val previewAlarms = listOf(
+        AlarmUiModel(id = 1, timeFormatted = "07:00", isActivated =  true,  repeatedDays = setOf(
+            DayOfWeek.WEDNESDAY, DayOfWeek.MONDAY)),
+        AlarmUiModel(id = 2, timeFormatted = "09:30", isActivated = false, repeatedDays = setOf())
+    )
+    MaterialTheme {
+        MainScreenExpanded(
             scheduleList = previewAlarms,
             nextAlarmText = "Прозвенит через 8 ч 30 мин",
             uiState = MainState(
