@@ -72,6 +72,7 @@ class SettingsAlarmViewModel @Inject constructor(
                     selectedHours = formater.hour,
                     selectedMinutes = alarm?.minutes ?: LocalTime.now().minute,
                     selectedAmPm = formater.amPm,
+                    selectedTask = alarm?.taskId ?: TaskType.SHAKE,
                     selectedDayOfWeek = alarm?.repeatDays ?: setOf(),
                     isAllDaysSelected = days.size == 7,
                     is24Hours = formater.is24Format,
@@ -171,7 +172,7 @@ class SettingsAlarmViewModel @Inject constructor(
                 minutes = _uiState.value.selectedMinutes,
                 repeatDays = _uiState.value.selectedDayOfWeek,
                 isRepeated = _uiState.value.selectedDayOfWeek.isNotEmpty(),
-                taskId = 1
+                taskId = _uiState.value.selectedTask
             ))
         }
     }
