@@ -9,7 +9,7 @@ data class AlarmEntity (
     val id: Int = 0,
     val hours: Int,
     val minutes: Int,
-    val taskId: Int,
+    val taskId: String,
     val repeatDays: String,
     val isRepeated: Boolean = true,
     val isActivate: Boolean = true
