@@ -8,7 +8,7 @@ import com.example.cleveralarmclock.core.data.database.dao.AlarmDao
 import com.example.cleveralarmclock.core.data.database.entity.AlarmEntity
 
 
-@Database(entities = [AlarmEntity::class], version = 1, exportSchema = false)
+@Database(entities = [AlarmEntity::class], version = 2, exportSchema = false)
 abstract class AlarmDatabase: RoomDatabase() {
 
     abstract fun alarmDao(): AlarmDao
