@@ -1,6 +1,5 @@
 package com.example.cleveralarmclock.presentation.manageAlarmFeature
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,13 +22,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices.PHONE
 import androidx.compose.ui.tooling.preview.Devices.TABLET
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.cleveralarmclock.R
+import com.example.cleveralarmclock.core.domain.task.AlarmTask
+import com.example.cleveralarmclock.core.domain.task.AlarmTaskProvider
+import com.example.cleveralarmclock.core.domain.task.TaskType
+import com.example.cleveralarmclock.presentation.manageAlarmFeature.components.AlarmTaskPicker
 import com.example.cleveralarmclock.presentation.manageAlarmFeature.components.DayOfWeekPicker
 import com.example.cleveralarmclock.presentation.manageAlarmFeature.components.WheelTimePicker
 import java.time.DayOfWeek
@@ -45,15 +49,18 @@ fun SettingsAlarm(
 ) {
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val alarmTaskList = viewModel.alarmTaskList
 
     when(windowSizeClass.widthSizeClass){
         WindowWidthSizeClass.Compact -> SettingsAlarmCompact(
             modifier = modifier,
             uiState = uiState,
+            alarmTaskList = alarmTaskList,
             onBackClick = onBackClick,
             onHoursChange = {hour -> viewModel.onHoursChange(hour) },
             onMinutesChange = {minute -> viewModel.onMinutesChange(minute) },
             onAmPmChange = {amPm -> viewModel.onAmPmChange(amPm) },
+            onTaskSelected = {taskId -> viewModel.onTaskSelected(taskId)},
             selectAllDayOfWeek = { viewModel.selectAllDayOfWeek() },
             onSelectDayOfWeek = {dayOfWeek -> viewModel.onSelectDayOfWeek(dayOfWeek)},
             onAddAlarmClock = { viewModel.onAddAlarmClock() }
@@ -68,10 +75,12 @@ fun SettingsAlarm(
 fun SettingsAlarmCompact(
     modifier: Modifier = Modifier,
     uiState: SettingAlarmState,
+    alarmTaskList: List<AlarmTask>,
     onBackClick: () -> Unit,
     onHoursChange: (Int) -> Unit,
     onMinutesChange: (Int) -> Unit,
     onAmPmChange: (String) -> Unit,
+    onTaskSelected: (TaskType) -> Unit,
     selectAllDayOfWeek: () -> Unit,
     onSelectDayOfWeek: (DayOfWeek) -> Unit,
     onAddAlarmClock: () -> Unit
@@ -122,7 +131,6 @@ fun SettingsAlarmCompact(
                 Modifier
                     .fillMaxWidth()
                     .padding(30.dp)
-                    .background(color = MaterialTheme.colorScheme.background)
                     .weight(1f),
                 contentAlignment = Alignment.Center
             ){
@@ -133,16 +141,28 @@ fun SettingsAlarmCompact(
                     onSelectDayOfWeek = {day -> onSelectDayOfWeek(day)}
                 )
             }
+            Box(Modifier
+                .fillMaxWidth()
+                .weight(1f),
+                contentAlignment = Alignment.Center
+            ){
+                AlarmTaskPicker(
+                    alarmTaskList = alarmTaskList,
+                    selectedTask = uiState.selectedTask,
+                    onTaskSelected = {taskId -> onTaskSelected(taskId)}
+                )
+            }
 
             Box(Modifier
                 .fillMaxWidth()
-                .weight(3f),
-                contentAlignment = Alignment.Center
+                .padding(20.dp)
+                .weight(1f),
+                contentAlignment = Alignment.BottomEnd
             ){
                 Button({
                     onAddAlarmClock()
                     onBackClick()
-                }) {Text("add") }
+                }) {Text(stringResource(R.string.save_new_alarm)) }
             }
 
 
@@ -159,11 +179,14 @@ fun SettingsAlarmPreview(){
             uiState = SettingAlarmState(
                 selectedHours = 13,
                 selectedMinutes = 9,
+                selectedDayOfWeek = setOf(DayOfWeek.MONDAY, DayOfWeek.WEDNESDAY)
             ),
+            alarmTaskList = AlarmTaskProvider.allTasks,
             onBackClick = {},
             onHoursChange = {},
             onMinutesChange = {},
             onAmPmChange = {},
+            onTaskSelected = {},
             selectAllDayOfWeek = {},
             onSelectDayOfWeek = {},
             onAddAlarmClock = {}
