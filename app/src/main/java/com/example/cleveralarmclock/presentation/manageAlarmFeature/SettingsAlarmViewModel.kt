@@ -4,6 +4,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cleveralarmclock.core.domain.module.Alarm
+import com.example.cleveralarmclock.core.domain.task.AlarmTaskProvider
+import com.example.cleveralarmclock.core.domain.task.TaskType
 import com.example.cleveralarmclock.core.domain.usecase.AddAlarmUseCase
 import com.example.cleveralarmclock.core.domain.usecase.GetAlarmByIdUseCase
 import com.example.cleveralarmclock.core.domain.util.DataTimeFormatter
@@ -22,6 +24,7 @@ data class SettingAlarmState(
     val selectedHours: Int = 0,
     val selectedMinutes: Int = 0,
     val selectedAmPm: String = "AM",
+    val selectedTask: TaskType = TaskType.SHAKE,
     val selectedDayOfWeek: Set<DayOfWeek> = setOf(),
     val isAllDaysSelected: Boolean = false,
     val is24Hours: Boolean = true,
@@ -38,6 +41,8 @@ class SettingsAlarmViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(SettingAlarmState())
     val uiState: StateFlow<SettingAlarmState> = _uiState.asStateFlow()
+
+    val alarmTaskList = AlarmTaskProvider.allTasks
 
     private val alarmId: Int = checkNotNull(savedStateHandle["alarmId"])
 
@@ -110,6 +115,14 @@ class SettingsAlarmViewModel @Inject constructor(
         _uiState.update {
             it.copy(
                 selectedAmPm = amPm
+            )
+        }
+    }
+
+    fun onTaskSelected(taskId: TaskType){
+        _uiState.update {
+            it.copy(
+                selectedTask = taskId
             )
         }
     }
