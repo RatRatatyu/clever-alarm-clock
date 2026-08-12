@@ -35,4 +35,9 @@
     <string name="daily">Daily</string>
     <string name="once">Once</string>
     <string name="custom">Custom</string>
+    <string name="save_new_alarm">Save</string>
+    <string name="shake">Shake</string>
+    <string name="shake_your_phone_to_turn_the_alarm_off">Shake your phone to turn the alarm off</string>
+    <string name="ai_task">AI task</string>
+    <string name="take_a_photo_of_required_object_to_turn_the_alarm_off">Take a photo of required object to turn the alarm off</string>
 </resources>
