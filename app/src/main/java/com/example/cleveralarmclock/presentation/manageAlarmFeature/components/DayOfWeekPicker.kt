@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -87,6 +88,7 @@ fun DayOfWeekPicker (
                     modifier = Modifier
                         .fillMaxHeight()
                         .clip(RoundedCornerShape(16.dp))
+                        .aspectRatio(1f)
                         .background(backgroundColor)
                         .clickable { onSelectDayOfWeek(day) }
                         .padding(horizontal = 12.dp, vertical = 8.dp),
