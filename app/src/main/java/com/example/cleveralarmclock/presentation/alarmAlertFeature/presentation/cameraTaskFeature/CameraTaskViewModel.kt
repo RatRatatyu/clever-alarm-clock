@@ -1,4 +1,4 @@
-package com.example.cleveralarmclock.presentation.alarmAlertFeature.presentation
+package com.example.cleveralarmclock.presentation.alarmAlertFeature.presentation.cameraTaskFeature
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -13,19 +13,15 @@ import javax.inject.Inject
 class CameraTaskViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val stopAlarmUseCase: StopAlarmUseCase,
-    private val getAlarmByIdUseCase: GetAlarmByIdUseCase
-): ViewModel(){
+): ViewModel() {
 
-    val alarmId: Int = savedStateHandle.get<Int>("ALARM_ID") ?: -1
+    private val alarmId: Int = checkNotNull(savedStateHandle["alarmId"])
 
 
 
     fun stopMusic(){
         viewModelScope.launch {
-            val alarmById = getAlarmByIdUseCase(alarmId)
-            stopAlarmUseCase(alarmById!!)
+            stopAlarmUseCase(alarmId)
         }
-
     }
-
 }
