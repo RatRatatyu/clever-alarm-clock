@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cleveralarmclock.core.domain.task.TaskType
 import com.example.cleveralarmclock.core.domain.usecase.GetAlarmByIdUseCase
+import com.example.cleveralarmclock.core.domain.usecase.SnoozeAlarmUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.channels.Channel
@@ -26,6 +27,7 @@ data class AlarmRingUiState(
 class AlarmRingViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val getAlarmByIdUseCase: GetAlarmByIdUseCase,
+    private val snoozeAlarmUseCase: SnoozeAlarmUseCase
 ): ViewModel() {
 
     private val alarmId: Int = checkNotNull(savedStateHandle["alarmId"])
@@ -34,6 +36,9 @@ class AlarmRingViewModel @Inject constructor(
     val uiState: StateFlow<AlarmRingUiState> = _uiState.asStateFlow()
     private val _navigationEvent = Channel<TaskType>()
     val navigationEvent = _navigationEvent.receiveAsFlow()
+
+    private val _closeActivityEvent = Channel<Unit>()
+    val closeActivityEvent = _closeActivityEvent.receiveAsFlow()
 
     init {
         loadAlarmInfo()
@@ -62,6 +67,13 @@ class AlarmRingViewModel @Inject constructor(
     fun onStopAlarm(){
         viewModelScope.launch {
             _navigationEvent.send(_uiState.value.taskId)
+        }
+    }
+
+    fun snoozeAlarm(){
+        viewModelScope.launch {
+            snoozeAlarmUseCase(alarmId)
+            _closeActivityEvent.send(Unit)
         }
     }
 
