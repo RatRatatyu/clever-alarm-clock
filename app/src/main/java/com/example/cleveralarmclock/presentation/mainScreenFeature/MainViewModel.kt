@@ -2,6 +2,7 @@ package com.example.cleveralarmclock.presentation.mainScreenFeature
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.cleveralarmclock.core.domain.task.AlarmTaskProvider
 import com.example.cleveralarmclock.core.domain.usecase.DeleteAlarmsUseCase
 import com.example.cleveralarmclock.core.domain.usecase.GetAlarmsUseCase
 import com.example.cleveralarmclock.core.domain.usecase.GetNextAlarmTimeUseCase
@@ -34,7 +35,8 @@ data class AlarmUiModel(
     val id: Int,
     val timeFormatted: String,
     val isActivated: Boolean,
-    val repeatedDays: Set<DayOfWeek>
+    val repeatedDays: Set<DayOfWeek>,
+    val taskName: Int?
 )
 @HiltViewModel
 class MainViewModel @Inject constructor(
@@ -56,6 +58,7 @@ class MainViewModel @Inject constructor(
         .map { list ->
             list.map { alarm ->
                 val formatted = dataTimeFormatter.convert24To12Hour(alarm.hours)
+                val taskName = AlarmTaskProvider.getTaskById(alarm.taskId.id)
 
                 val timeString = if (formatted.is24Format) {
                     String.format(Locale.getDefault(), "%02d:%02d", formatted.hour, alarm.minutes)
@@ -68,6 +71,7 @@ class MainViewModel @Inject constructor(
                     timeFormatted = timeString,
                     isActivated = alarm.isActivate,
                     repeatedDays = alarm.repeatDays,
+                    taskName = taskName?.titleResId
                 )
             }
         }
