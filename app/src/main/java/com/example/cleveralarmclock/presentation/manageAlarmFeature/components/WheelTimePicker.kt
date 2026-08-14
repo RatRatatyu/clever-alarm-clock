@@ -18,7 +18,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.cleveralarmclock.core.ui.WheelPicker
 import java.util.Locale
@@ -86,7 +85,7 @@ fun WheelTimePicker(
                     .fillMaxWidth()
                     .height(45.dp)
                     .clip(RoundedCornerShape(10.dp))
-                    .background(Color.Gray.copy(alpha = 0.15f))
+                    .background(MaterialTheme.colorScheme.secondaryContainer)
             )
 
             Row (
