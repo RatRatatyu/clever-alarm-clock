@@ -64,6 +64,7 @@ fun AlarmList(
                 items(scheduleList, key= {it.id} ){ alarm ->
                     CardScheduledAlarm(
                         timeText = alarm.timeFormatted,
+                        taskName = alarm.taskName,
                         isActive = alarm.isActivated,
                         selectedDaysOfWeek = alarm.repeatedDays,
                         onChanged = {toggleAlarmStatus(alarm.id)},
