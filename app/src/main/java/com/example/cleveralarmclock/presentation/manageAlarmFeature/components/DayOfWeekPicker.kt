@@ -73,13 +73,13 @@ fun DayOfWeekPicker (
                 val isSelected = selectedDayOfWeek.contains(day)
 
                 val backgroundColor = if (isSelected) {
-                    MaterialTheme.colorScheme.primary
+                    MaterialTheme.colorScheme.secondaryContainer
                 } else {
                     MaterialTheme.colorScheme.surfaceVariant
                 }
 
                 val textColor = if (isSelected) {
-                    MaterialTheme.colorScheme.onPrimary
+                    MaterialTheme.colorScheme.onSecondaryContainer
                 } else {
                     MaterialTheme.colorScheme.onSurfaceVariant
                 }
