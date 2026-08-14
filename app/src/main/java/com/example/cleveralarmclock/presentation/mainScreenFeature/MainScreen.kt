@@ -1,6 +1,5 @@
 package com.example.cleveralarmclock.presentation.mainScreenFeature
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,7 +25,6 @@ import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarState
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
@@ -326,8 +324,8 @@ fun MainScreenPrev() {
 
     val previewAlarms = listOf(
         AlarmUiModel(id = 1, timeFormatted = "07:00", isActivated =  true,  repeatedDays = setOf(
-            DayOfWeek.WEDNESDAY, DayOfWeek.MONDAY)),
-        AlarmUiModel(id = 2, timeFormatted = "09:30", isActivated = false, repeatedDays = setOf())
+            DayOfWeek.WEDNESDAY, DayOfWeek.MONDAY), taskName = null),
+        AlarmUiModel(id = 2, timeFormatted = "09:30", isActivated = false, repeatedDays = setOf(), taskName = null)
     )
     MaterialTheme {
         MainScreenCompact(
@@ -355,8 +353,8 @@ fun MainScreenPrevTablet() {
 
     val previewAlarms = listOf(
         AlarmUiModel(id = 1, timeFormatted = "07:00", isActivated =  true,  repeatedDays = setOf(
-            DayOfWeek.WEDNESDAY, DayOfWeek.MONDAY)),
-        AlarmUiModel(id = 2, timeFormatted = "09:30", isActivated = false, repeatedDays = setOf())
+            DayOfWeek.WEDNESDAY, DayOfWeek.MONDAY), taskName = null),
+        AlarmUiModel(id = 2, timeFormatted = "09:30", isActivated = false, repeatedDays = setOf(), taskName = null)
     )
     MaterialTheme {
         MainScreenExpanded(
