@@ -2,7 +2,6 @@ package com.example.cleveralarmclock.core.domain.usecase
 
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import com.example.cleveralarmclock.core.domain.alarm.AlarmPlayer
 import com.example.cleveralarmclock.core.domain.alarm.AlarmSchedule
 import com.example.cleveralarmclock.core.service.services.AlarmService
@@ -18,12 +17,13 @@ class StopAlarmUseCase @Inject constructor(
 ) {
 
     suspend operator fun invoke(alarmId: Int){
-        val alarm = getAlarmByIdUseCase(alarmId) ?: return
         alarmPlayer.stopPlayer()
 
         val intent = Intent(context, AlarmService::class.java)
         context.stopService(intent)
 
+        val alarm = getAlarmByIdUseCase(alarmId) ?: return
+        
         if(alarm.isRepeated){
             alarmSchedule.schedule(
                 alarm.hours,
@@ -34,7 +34,5 @@ class StopAlarmUseCase @Inject constructor(
         }else{
             toggleAlarmUseCase(alarm.id)
         }
-        Log.i("ALARM_DEBUDING", "repited alarm set ")
-
     }
 }
