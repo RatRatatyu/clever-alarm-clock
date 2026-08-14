@@ -23,39 +23,21 @@ class AlarmScheduleImpl @Inject constructor(
     @SuppressLint("MissingPermission")
     override fun schedule(hour: Int, minute: Int, repeatDays: Set<DayOfWeek>, id: Int){
 
-        val intent = Intent(context, AlarmReceiver::class.java).apply {
-            putExtra("ALARM_ID", id)
-        }
-        val pendingIntent = PendingIntent.getBroadcast(
-            context,
-            id,
-            intent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
         val localTime = AlarmTimeCalculator.calculateNextTriggerTime(
             hour,
             minute,
             repeatDays
         )
-        val triggerTime = localTime
-            .atZone(ZoneId.systemDefault())
-            .toInstant()
-            .toEpochMilli()
 
-        val info = AlarmManager.AlarmClockInfo(
-            triggerTime,
-            pendingIntent
-        )
+        helper(id, localTime)
 
-        Log.i("ALARM_DEBUG","${LocalDateTime.now()}")
+    }
 
-        Log.i("ALARM_DEBUG","$localTime")
 
-        alarmManager?.setAlarmClock(
-            info,
-            pendingIntent
-        )
-        Log.i("ALARM_DEBUG","Будильник устоновлен")
+    override fun snoozeFor10seconds(id: Int) {
+        val snoozeTime = LocalDateTime.now().plusMinutes(10)
+
+        helper(id, snoozeTime)
     }
 
     override fun cancel(id: Int){
@@ -69,4 +51,35 @@ class AlarmScheduleImpl @Inject constructor(
         Log.i("ALARM_DEBUG","Будильник отменен $id")
         alarmManager?.cancel(pendingIntent)
     }
+
+    @SuppressLint("MissingPermission")
+    private fun helper(
+        alarmId: Int,
+        timeToSet: LocalDateTime
+    ){
+        val intent = Intent(context, AlarmReceiver::class.java).apply {
+            putExtra("ALARM_ID", alarmId)
+        }
+        val pendingIntent = PendingIntent.getBroadcast(
+            context,
+            alarmId,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        val triggerTime = timeToSet
+            .atZone(ZoneId.systemDefault())
+            .toInstant()
+            .toEpochMilli()
+
+        val info = AlarmManager.AlarmClockInfo(
+            triggerTime,
+            pendingIntent
+        )
+        alarmManager?.setAlarmClock(
+            info,
+            pendingIntent
+        )
+    }
 }
+
