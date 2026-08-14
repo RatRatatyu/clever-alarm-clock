@@ -5,11 +5,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.fitOutside
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
@@ -23,14 +22,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Devices.TABLET
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.text.util.LocalePreferences
 import com.example.cleveralarmclock.core.domain.util.toFormattedString
 import java.time.DayOfWeek
-import java.time.temporal.Temporal
 import java.util.Locale
 import java.time.format.TextStyle as dayOfWeekFormater
 
@@ -38,6 +34,7 @@ import java.time.format.TextStyle as dayOfWeekFormater
 fun CardScheduledAlarm(
     modifier: Modifier = Modifier,
     timeText: String,
+    taskName: Int?,
     isActive: Boolean,
     selectedDaysOfWeek: Set<DayOfWeek>,
     onChanged: () -> Unit,
@@ -85,12 +82,36 @@ fun CardScheduledAlarm(
                 modifier = Modifier
                     .weight(2f)
             ) {
-                // Alarm time
-                Text(
-                    text = timeText,
-                    style = MaterialTheme.typography.headlineLarge,
-                    color = contentColor
-                )
+                // Alarm time and task name
+                Row(
+                    Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Start,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = timeText,
+                        style = MaterialTheme.typography.headlineLarge,
+                        color = contentColor
+                    )
+
+                    Spacer(modifier = Modifier.width(10.dp))
+
+                    taskName?.let { resId ->
+                        Card(
+                            colors = CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                                contentColor = MaterialTheme.colorScheme.onTertiaryContainer
+                            )
+                        ) {
+                            Text(
+                                text = stringResource(id = resId),
+                                style = MaterialTheme.typography.bodyMedium,
+                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                            )
+                        }
+                    }
+                }
 
                 Spacer(modifier = Modifier.height(15.dp))
 
@@ -174,73 +195,3 @@ fun CardScheduledAlarm(
     }
 }
 
-
-@Preview(
-    showSystemUi = true,
-    device = TABLET
-)
-@Composable
-fun CardScheduledAlarmPrev(){
-    MaterialTheme{
-        Column(modifier = Modifier
-            .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            CardScheduledAlarm(
-                timeText = "08:30",
-                isActive = true,
-                selectedDaysOfWeek = setOf(DayOfWeek.MONDAY, DayOfWeek.FRIDAY, DayOfWeek.TUESDAY),
-                onChanged = {},
-                onClick = {},
-                onLongClick = {},
-                isSelectionMode = false,
-                isChecked = false
-            )
-
-            CardScheduledAlarm(
-                timeText = "08:30",
-                isActive = false,
-                selectedDaysOfWeek = setOf(DayOfWeek.MONDAY, DayOfWeek.FRIDAY, DayOfWeek.TUESDAY),
-                onChanged = {},
-                onClick = {},
-                onLongClick = {},
-                isSelectionMode = false,
-                isChecked = false
-            )
-
-            CardScheduledAlarm(
-                timeText = "08:30",
-                isActive = true,
-                selectedDaysOfWeek = setOf(DayOfWeek.MONDAY, DayOfWeek.FRIDAY, DayOfWeek.TUESDAY),
-                onChanged = {},
-                onClick = {},
-                onLongClick = {},
-                isSelectionMode = true,
-                isChecked = false
-            )
-
-            CardScheduledAlarm(
-                timeText = "08:30",
-                isActive = true,
-                selectedDaysOfWeek = setOf(DayOfWeek.MONDAY, DayOfWeek.FRIDAY, DayOfWeek.TUESDAY),
-                onChanged = {},
-                onClick = {},
-                onLongClick = {},
-                isSelectionMode = true,
-                isChecked = true
-            )
-
-            CardScheduledAlarm(
-                timeText = "08:30",
-                isActive = false,
-                selectedDaysOfWeek = setOf(DayOfWeek.MONDAY, DayOfWeek.FRIDAY, DayOfWeek.TUESDAY),
-                onChanged = {},
-                onClick = {},
-                onLongClick = {},
-                isSelectionMode = true,
-                isChecked = true
-            )
-        }
-    }
-}
