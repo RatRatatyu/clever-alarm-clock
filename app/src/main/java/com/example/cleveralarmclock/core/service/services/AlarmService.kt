@@ -1,23 +1,30 @@
 package com.example.cleveralarmclock.core.service.services
 
 import android.app.PendingIntent
-import android.app.Service
 import android.content.Intent
 import android.content.pm.ServiceInfo
 import android.os.Build
 import android.os.IBinder
 import androidx.core.app.ServiceCompat
+import androidx.lifecycle.LifecycleService
+import androidx.lifecycle.lifecycleScope
 import com.example.cleveralarmclock.core.domain.alarm.AlarmPlayer
+import com.example.cleveralarmclock.core.domain.usecase.RescheduleNextAlarmUseCase
 import com.example.cleveralarmclock.core.notifications.NotificationFactory
 import com.example.cleveralarmclock.presentation.alarmAlertFeature.AlarmAlertActivity
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class AlarmService: Service() {
+class AlarmService: LifecycleService() {
 
     @Inject
     lateinit var alarmPlayer: AlarmPlayer
+
+    @Inject
+    lateinit var rescheduleNextAlarmUseCase: RescheduleNextAlarmUseCase
 
     @Inject
     lateinit var notificationFactory: NotificationFactory
@@ -28,7 +35,9 @@ class AlarmService: Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        val alarmId = intent?.getIntExtra("ALARM_ID", 0)
+        super.onStartCommand(intent, flags, startId)
+
+        val alarmId = intent?.getIntExtra("ALARM_ID", -1) ?: -1
 
         val startAppIntent = Intent(this, AlarmAlertActivity::class.java).apply {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
@@ -41,6 +50,13 @@ class AlarmService: Service() {
             startAppIntent,
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
+
+
+        if (alarmId != -1) {
+            lifecycleScope.launch(Dispatchers.IO) {
+                rescheduleNextAlarmUseCase(alarmId = alarmId)
+            }
+        }
 
         alarmPlayer.startPlayer()
         val notificationBuilder = notificationFactory.showNotification(pendingIntent)
@@ -64,6 +80,8 @@ class AlarmService: Service() {
         alarmPlayer.stopPlayer()
     }
 
-    override fun onBind(intent: Intent?): IBinder? = null
+    override fun onBind(intent: Intent): IBinder? {
+        return super.onBind(intent)
+    }
 
 }
