@@ -8,6 +8,7 @@ import android.content.Intent
 import android.util.Log
 import com.example.cleveralarmclock.core.domain.alarm.AlarmSchedule
 import com.example.cleveralarmclock.core.domain.util.AlarmTimeCalculator
+import com.example.cleveralarmclock.core.domain.util.toSnoozeId
 import com.example.cleveralarmclock.core.service.receivers.AlarmReceiver
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.time.DayOfWeek
@@ -16,7 +17,8 @@ import java.time.ZoneId
 import javax.inject.Inject
 
 class AlarmScheduleImpl @Inject constructor(
-    @param:ApplicationContext private val context: Context, 
+    @param:ApplicationContext private val context: Context,
+    private val alarmPreNotificationScheduler: AlarmPreNotificationScheduler
 ): AlarmSchedule{
     private val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
 
@@ -30,14 +32,16 @@ class AlarmScheduleImpl @Inject constructor(
         )
 
         helper(id, localTime)
+        alarmPreNotificationScheduler.preNotificationScheduler(id, localTime)
 
     }
 
 
     override fun snoozeFor10seconds(id: Int) {
         val snoozeTime = LocalDateTime.now().plusMinutes(10)
+        helper(id.toSnoozeId(), snoozeTime)
+        alarmPreNotificationScheduler.preNotificationScheduler(id, snoozeTime)
 
-        helper(id, snoozeTime)
     }
 
     override fun cancel(id: Int){
@@ -50,6 +54,7 @@ class AlarmScheduleImpl @Inject constructor(
         )
         Log.i("ALARM_DEBUG","Будильник отменен $id")
         alarmManager?.cancel(pendingIntent)
+        alarmPreNotificationScheduler.cancelPreNotification(id)
     }
 
     @SuppressLint("MissingPermission")
