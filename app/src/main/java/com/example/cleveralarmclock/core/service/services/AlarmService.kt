@@ -1,5 +1,6 @@
 package com.example.cleveralarmclock.core.service.services
 
+import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Intent
 import android.content.pm.ServiceInfo
@@ -10,6 +11,7 @@ import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
 import com.example.cleveralarmclock.core.domain.alarm.AlarmPlayer
 import com.example.cleveralarmclock.core.domain.usecase.RescheduleNextAlarmUseCase
+import com.example.cleveralarmclock.core.domain.util.toPreNotificationId
 import com.example.cleveralarmclock.core.notifications.NotificationFactory
 import com.example.cleveralarmclock.presentation.alarmAlertFeature.AlarmAlertActivity
 import dagger.hilt.android.AndroidEntryPoint
@@ -46,20 +48,23 @@ class AlarmService: LifecycleService() {
 
         val pendingIntent: PendingIntent = PendingIntent.getActivity(
             this,
-            alarmId ?: 0,
+            alarmId,
             startAppIntent,
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
 
 
         if (alarmId != -1) {
+            val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.cancel(alarmId.toPreNotificationId())
+
             lifecycleScope.launch(Dispatchers.IO) {
                 rescheduleNextAlarmUseCase(alarmId = alarmId)
             }
         }
 
         alarmPlayer.startPlayer()
-        val notificationBuilder = notificationFactory.showNotification(pendingIntent)
+        val notificationBuilder = notificationFactory.createRingNotification(pendingIntent)
 
         ServiceCompat.startForeground(
             this,
