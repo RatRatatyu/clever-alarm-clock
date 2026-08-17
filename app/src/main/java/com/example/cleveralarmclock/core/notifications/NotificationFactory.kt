@@ -5,39 +5,72 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
+import android.os.Build
 import androidx.core.app.NotificationCompat
 import com.example.cleveralarmclock.R
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class NotificationFactory @Inject constructor(
     @param:ApplicationContext private val context: Context
 ) {
-    val channelId = "chanelId"
+    private val notificationManager =
+        context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-    fun showNotification(
-        pendingIntent: PendingIntent
-    ): Notification {
-        val notificationManager: NotificationManager = context.getSystemService(
-            NotificationManager::class.java) as NotificationManager
-        val channel = NotificationChannel(
-            channelId,
+    init {
+        createNotificationChannels()
+    }
+    companion object {
+        const val CHANNEL_RING_ID = "alarm_ring_channel"
+        const val CHANNEL_PRE_ID = "alarm_pre_channel"
+    }
+
+    private fun createNotificationChannels() {
+        val ringChannel = NotificationChannel(
+            CHANNEL_RING_ID,
             context.getString(R.string.notification_title),
             NotificationManager.IMPORTANCE_HIGH
         ).apply {
-            description = context.getString(R.string.notification_description)
+            setSound(null, null)
         }
 
-        notificationManager.createNotificationChannel(channel)
+        val preChannel = NotificationChannel(
+            CHANNEL_PRE_ID,
+            context.getString(R.string.forewarning),
+            NotificationManager.IMPORTANCE_LOW
+        )
 
-        return NotificationCompat.Builder(context, channelId)
-            .setSmallIcon(android.R.drawable.ic_lock_idle_alarm)
-            .setContentTitle(context.getString(R.string.notification_title))
-            .setContentText(context.getString(R.string.notification_description))
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
+        notificationManager.createNotificationChannels(listOf(ringChannel, preChannel))
+    }
+
+    fun createRingNotification(fullScreenPendingIntent: PendingIntent): Notification {
+        return NotificationCompat.Builder(context, CHANNEL_RING_ID)
+            .setSmallIcon(R.drawable.ic_alarm)
+            .setContentTitle(context.getString(R.string.alarm))
+            .setContentText(context.getString(R.string.it_s_time_to_get_up))
+            .setPriority(NotificationCompat.PRIORITY_MAX)
             .setCategory(NotificationCompat.CATEGORY_ALARM)
-            .setAutoCancel(true)
-            .setFullScreenIntent(pendingIntent, true)
+            .setFullScreenIntent(fullScreenPendingIntent, true)
+            .setOngoing(true)
+            .build()
+    }
+
+    fun createPreNotification(
+        dismissPendingIntent: PendingIntent,
+        turnOffPendingIntent: PendingIntent
+    ): Notification {
+        return NotificationCompat.Builder(context, CHANNEL_PRE_ID)
+            .setSmallIcon(R.drawable.ic_alarm)
+            .setContentTitle(context.getString(R.string.upcoming_alarm))
+            .setContentText(context.getString(R.string.the_alarm_will_go_off_in_10_minutes))
+            .setPriority(NotificationCompat.PRIORITY_LOW)
+            .setOngoing(true)
+            .addAction(R.drawable.ic_skip,
+                context.getString(R.string.skip_for_today), dismissPendingIntent)
+            .addAction(R.drawable.ic_notifications_off,
+                context.getString(R.string.turn_off_completely), turnOffPendingIntent)
             .build()
     }
 }
