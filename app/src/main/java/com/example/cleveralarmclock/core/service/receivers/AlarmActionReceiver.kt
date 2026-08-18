@@ -28,7 +28,7 @@ class AlarmActionReceiver: BroadcastReceiver()  {
         if (alarmId == -1) return
 
         val notificationManager = ctx.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        alarmId?.let { notificationManager.cancel(it.toPreNotificationId()) }
+        notificationManager.cancel(alarmId.toPreNotificationId())
 
         val pendingResult = goAsync()
         CoroutineScope(Dispatchers.IO).launch {
