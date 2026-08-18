@@ -2,8 +2,6 @@ package com.example.cleveralarmclock.core.domain.util
 
 import java.time.DayOfWeek
 import java.time.LocalDateTime
-import javax.inject.Inject
-
 
 object AlarmTimeCalculator {
 
