@@ -6,8 +6,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -40,12 +38,11 @@ fun DayOfWeekPicker (
     selectAllDayOfWeek: () -> Unit,
     onSelectDayOfWeek: (DayOfWeek) -> Unit
 ){
-    Column(modifier) {
+    Column(modifier = modifier.fillMaxWidth()) {
         Row(
-            Modifier
-                .fillMaxWidth()
-                .weight(1f),
+            modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
                 text = selectedDayOfWeek.toFormattedString(
@@ -54,8 +51,7 @@ fun DayOfWeekPicker (
                 style = MaterialTheme.typography.titleMedium
             )
 
-
-            IconButton({selectAllDayOfWeek()}) {
+            IconButton(selectAllDayOfWeek) {
                 Icon(
                     imageVector = Icons.Default.DateRange,
                     contentDescription = stringResource(R.string.select_all_weekdays)
@@ -64,9 +60,7 @@ fun DayOfWeekPicker (
         }
 
         Row(
-            Modifier
-                .fillMaxWidth()
-                .weight(1f),
+            modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             DayOfWeek.entries.forEach { day ->
@@ -86,12 +80,10 @@ fun DayOfWeekPicker (
 
                 Box(
                     modifier = Modifier
-                        .fillMaxHeight()
-                        .clip(RoundedCornerShape(16.dp))
-                        .aspectRatio(1f)
+                        .clip(RoundedCornerShape(12.dp))
                         .background(backgroundColor)
                         .clickable { onSelectDayOfWeek(day) }
-                        .padding(horizontal = 12.dp, vertical = 8.dp),
+                        .padding(horizontal = 10.dp, vertical = 12.dp),
                     contentAlignment = Alignment.Center
                 ){
                     Text(
