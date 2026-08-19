@@ -36,8 +36,6 @@ import androidx.compose.ui.tooling.preview.Devices.PHONE
 import androidx.compose.ui.tooling.preview.Devices.TABLET
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.cleveralarmclock.R
@@ -97,42 +95,6 @@ fun SettingsAlarm(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsAlarmExpanded(
-    modifier: Modifier = Modifier,
-    onDismissRequest: () -> Unit,
-    uiState: SettingAlarmState,
-    alarmTaskList: List<AlarmTask>,
-    onHoursChange: (Int) -> Unit,
-    onMinutesChange: (Int) -> Unit,
-    onAmPmChange: (String) -> Unit,
-    onTaskSelected: (TaskType) -> Unit,
-    selectAllDayOfWeek: () -> Unit,
-    onSelectDayOfWeek: (DayOfWeek) -> Unit,
-    onAddAlarmClock: () -> Unit
-) {
-    Dialog(
-        onDismissRequest = onDismissRequest,
-        properties = DialogProperties(
-            usePlatformDefaultWidth = false // Allows dialogue to be wide on tablet
-        )
-    ) {
-        SettingsAlarmExpandedContent(
-            modifier = modifier,
-            onDismissRequest = onDismissRequest,
-            uiState = uiState,
-            alarmTaskList = alarmTaskList,
-            onHoursChange = onHoursChange,
-            onMinutesChange = onMinutesChange,
-            onAmPmChange = onAmPmChange,
-            onTaskSelected = onTaskSelected,
-            selectAllDayOfWeek = selectAllDayOfWeek,
-            onSelectDayOfWeek = onSelectDayOfWeek,
-            onAddAlarmClock = onAddAlarmClock
-        )
-    }
-}
-
-@Composable
-fun SettingsAlarmExpandedContent(
     modifier: Modifier = Modifier,
     onDismissRequest: () -> Unit,
     uiState: SettingAlarmState,
@@ -244,6 +206,8 @@ fun SettingsAlarmExpandedContent(
 }
 
 
+
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsAlarmCompact(
@@ -348,7 +312,7 @@ fun SettingsAlarmCompact(
 @Composable
 fun ExpandedPreview(){
     MaterialTheme{
-        SettingsAlarmExpandedContent(
+        SettingsAlarmExpanded(
             onDismissRequest = {},
             uiState = SettingAlarmState(
                 selectedHours = 13,
