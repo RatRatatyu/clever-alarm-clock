@@ -1,4 +1,4 @@
-package com.example.cleveralarmclock.core.domain.usecase
+package com.example.cleveralarmclock.core.domain.usecase.manadge
 
 import com.example.cleveralarmclock.core.domain.alarm.AlarmSchedule
 import com.example.cleveralarmclock.core.domain.repository.AlarmRepository
