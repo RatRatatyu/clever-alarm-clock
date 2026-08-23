@@ -10,7 +10,7 @@ import androidx.core.app.ServiceCompat
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
 import com.example.cleveralarmclock.core.domain.alarm.AlarmPlayer
-import com.example.cleveralarmclock.core.domain.usecase.RescheduleNextAlarmUseCase
+import com.example.cleveralarmclock.core.domain.usecase.schedule.RescheduleNextAlarmUseCase
 import com.example.cleveralarmclock.core.domain.util.toPreNotificationId
 import com.example.cleveralarmclock.core.notifications.NotificationFactory
 import com.example.cleveralarmclock.presentation.alarmAlertFeature.AlarmAlertActivity

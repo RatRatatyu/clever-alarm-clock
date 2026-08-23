@@ -1,6 +1,7 @@
 package com.example.cleveralarmclock.core.domain.usecase
 
 import com.example.cleveralarmclock.core.domain.alarm.AlarmSchedule
+import com.example.cleveralarmclock.core.domain.usecase.schedule.RescheduleNextAlarmUseCase
 import javax.inject.Inject
 
 class DismissTodayUseCase @Inject constructor(
