@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cleveralarmclock.core.domain.task.AlarmTaskProvider
 import com.example.cleveralarmclock.core.domain.usecase.manage.DeleteAlarmsUseCase
-import com.example.cleveralarmclock.core.domain.usecase.GetAlarmsUseCase
+import com.example.cleveralarmclock.core.domain.usecase.manage.GetAlarmsUseCase
 import com.example.cleveralarmclock.core.domain.usecase.GetNextAlarmTimeUseCase
 import com.example.cleveralarmclock.core.domain.usecase.manage.ToggleAlarmUseCase
 import com.example.cleveralarmclock.core.domain.util.DataTimeFormatter
