@@ -5,8 +5,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -15,7 +15,10 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.FloatingActionButton
@@ -24,6 +27,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
@@ -41,6 +45,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.cleveralarmclock.R
 import com.example.cleveralarmclock.presentation.mainScreenFeature.components.AlarmList
+import com.example.cleveralarmclock.presentation.mainScreenFeature.components.NextAlarmInfo
 import java.time.DayOfWeek
 
 
@@ -110,8 +115,7 @@ fun MainScreenExpanded(
     onLongPress: (Int) -> Unit
 ){
     Scaffold(
-        modifier = modifier
-            .fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         topBar = {
             if (uiState.isSelectedMode) {
                 TopAppBarComponent(
@@ -121,76 +125,115 @@ fun MainScreenExpanded(
             }
         },
     ) { innerPadding ->
-
         Row (
-            modifier
+            modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding),
-            horizontalArrangement = Arrangement.Center
+                .padding(innerPadding)
+                .padding(horizontal = 16.dp),
+            horizontalArrangement = Arrangement.spacedBy(24.dp)
         ){
+            // Left Pane: Alarm List
             Column(
                 modifier = Modifier
-                    .weight(2f)
+                    .weight(1f)
+                    .fillMaxSize()
             ) {
-                Box(
-                    Modifier
-                        .fillMaxSize()
-                        .weight(1f)
-                ){
-                    AlarmList(
-                        scheduleList = scheduleList,
-                        nextAlarmText = nextAlarmText,
-                        isSelectedMode = uiState.isSelectedMode,
-                        isChecked = uiState.selectedList,
-                        toggleAlarmStatus = {alarmId -> toggleAlarmStatus(alarmId)},
-                        onPress = {alarmId -> onPress(alarmId)},
-                        onLongPress = {alarmId -> onLongPress(alarmId)}
-                    )
-                }
+                AlarmList(
+                    scheduleList = scheduleList,
+                    isSelectedMode = uiState.isSelectedMode,
+                    isChecked = uiState.selectedList,
+                    toggleAlarmStatus = toggleAlarmStatus,
+                    onPress = onPress,
+                    onLongPress = onLongPress
+                )
             }
+
+            // Right Pane: Info & Actions
             Column(
                 modifier = Modifier
-                    .fillMaxHeight()
-                    .weight(1f),
+                    .weight(1f)
+                    .fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
+                verticalArrangement = Arrangement.SpaceEvenly
             ) {
-                if(uiState.isSelectedMode){
-                    FilledIconButton(
-                        onClick = { deleteAlarms() },
-                        modifier = Modifier.size(56.dp),
-                        colors = IconButtonDefaults.filledIconButtonColors(
-                            containerColor = MaterialTheme.colorScheme.errorContainer,
-                            contentColor = MaterialTheme.colorScheme.error
+                // Next Alarm Info Card
+                Column(
+                    modifier = Modifier.weight(2f),
+                    verticalArrangement = Arrangement.Top
+                ) {
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                            contentColor = MaterialTheme.colorScheme.onSecondaryContainer
                         )
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.Delete,
-                            contentDescription = stringResource(R.string.delete),
-                            modifier = Modifier.size(28.dp)
-                        )
-                    }
-                }else{
-                    FilledIconButton(
-                        onClick = { onAddAlarmClick(-1) },
-                        modifier = Modifier.size(56.dp),
-                        shape = RoundedCornerShape(16.dp),
-                        colors = IconButtonDefaults.filledIconButtonColors(
-                            containerColor = MaterialTheme.colorScheme.primaryContainer,
-                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                        )
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Add,
-                            contentDescription = "Add alarm clock"
-                        )
+                        Column {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(10.dp),
+                                horizontalArrangement = Arrangement.Start,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Notifications,
+                                    contentDescription = "Next Alarm",
+                                    modifier = Modifier.padding(horizontal = 10.dp)
+                                )
+                                Text(
+                                    text = if(nextAlarmText != null) "Next Alarm" else "No active alarms",
+                                    style = MaterialTheme.typography.titleSmall
+                                )
+                            }
+                            NextAlarmInfo(
+                                scheduleList = scheduleList,
+                                nextAlarmText = nextAlarmText,
+                            )
+                        }
                     }
                 }
 
-
+               // Action Button Row
+               Row(
+                   modifier = Modifier.weight(3f),
+                   verticalAlignment = Alignment.CenterVertically,
+                   horizontalArrangement = Arrangement.Center
+               ) {
+                   if(uiState.isSelectedMode){
+                       FilledIconButton(
+                           onClick = deleteAlarms,
+                           modifier = Modifier.size(80.dp),
+                           colors = IconButtonDefaults.filledIconButtonColors(
+                               containerColor = MaterialTheme.colorScheme.errorContainer,
+                               contentColor = MaterialTheme.colorScheme.error
+                           )
+                       ) {
+                           Icon(
+                               imageVector = Icons.Default.Delete,
+                               contentDescription = stringResource(R.string.delete),
+                               modifier = Modifier.size(32.dp)
+                           )
+                       }
+                   }else{
+                       FilledIconButton(
+                           onClick = { onAddAlarmClick(-1) },
+                           modifier = Modifier.size(80.dp),
+                           shape = RoundedCornerShape(20.dp),
+                           colors = IconButtonDefaults.filledIconButtonColors(
+                               containerColor = MaterialTheme.colorScheme.primaryContainer,
+                               contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                           )
+                       ) {
+                           Icon(
+                               imageVector = Icons.Default.Add,
+                               contentDescription = "Add alarm clock",
+                               modifier = Modifier.size(32.dp)
+                           )
+                       }
+                   }
+               }
             }
-
-
         }
     }
 }
@@ -233,11 +276,16 @@ fun MainScreenCompact(
     ) { innerPadding ->
 
         Column (
-            modifier
+            modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding),
             verticalArrangement = Arrangement.Center
         ){
+            NextAlarmInfo(
+                scheduleList = scheduleList,
+                nextAlarmText = nextAlarmText,
+            )
+
             Box(
                 Modifier
                     .fillMaxSize()
@@ -245,7 +293,6 @@ fun MainScreenCompact(
             ){
                 AlarmList(
                     scheduleList = scheduleList,
-                    nextAlarmText = nextAlarmText,
                     isSelectedMode = uiState.isSelectedMode,
                     isChecked = uiState.selectedList,
                     toggleAlarmStatus = {alarmId -> toggleAlarmStatus(alarmId)},
@@ -263,7 +310,8 @@ fun FloatingActionButtonComponent(
 ){
     FloatingActionButton(
         onClick = { onAddAlarmClick(-1) },
-        shape = RoundedCornerShape(16.dp)
+        shape = RoundedCornerShape(16.dp),
+        modifier = Modifier.size(70.dp)
     ) {
         Icon(
             imageVector = Icons.Default.Add,
@@ -280,7 +328,7 @@ fun BottomBarComponent(
 
         FilledIconButton(
             onClick = { deleteAlarms() },
-            modifier = Modifier.size(56.dp),
+            modifier = Modifier.size(70.dp),
             colors = IconButtonDefaults.filledIconButtonColors(
                 containerColor = MaterialTheme.colorScheme.errorContainer,
                 contentColor = MaterialTheme.colorScheme.error
