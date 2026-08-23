@@ -1,4 +1,4 @@
-package com.example.cleveralarmclock.core.domain.usecase
+package com.example.cleveralarmclock.core.domain.usecase.ring
 
 import android.content.Context
 import android.content.Intent
