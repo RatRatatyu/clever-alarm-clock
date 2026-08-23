@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.cleveralarmclock.core.domain.module.Alarm
 import com.example.cleveralarmclock.core.domain.task.AlarmTaskProvider
 import com.example.cleveralarmclock.core.domain.task.TaskType
-import com.example.cleveralarmclock.core.domain.usecase.AddAlarmUseCase
+import com.example.cleveralarmclock.core.domain.usecase.manadge.AddAlarmUseCase
 import com.example.cleveralarmclock.core.domain.usecase.GetAlarmByIdUseCase
 import com.example.cleveralarmclock.core.domain.util.DataTimeFormatter
 import dagger.hilt.android.lifecycle.HiltViewModel
