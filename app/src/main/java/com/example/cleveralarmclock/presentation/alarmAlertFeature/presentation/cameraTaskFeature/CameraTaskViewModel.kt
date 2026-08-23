@@ -3,7 +3,7 @@ package com.example.cleveralarmclock.presentation.alarmAlertFeature.presentation
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.cleveralarmclock.core.domain.usecase.StopAlarmPlayerUseCase
+import com.example.cleveralarmclock.core.domain.usecase.ring.StopAlarmPlayerUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
