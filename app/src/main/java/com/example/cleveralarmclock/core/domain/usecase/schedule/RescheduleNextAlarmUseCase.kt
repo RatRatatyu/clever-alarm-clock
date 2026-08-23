@@ -2,7 +2,7 @@ package com.example.cleveralarmclock.core.domain.usecase.schedule
 
 import com.example.cleveralarmclock.core.domain.alarm.AlarmSchedule
 import com.example.cleveralarmclock.core.domain.usecase.manage.GetAlarmByIdUseCase
-import com.example.cleveralarmclock.core.domain.usecase.ToggleAlarmUseCase
+import com.example.cleveralarmclock.core.domain.usecase.manage.ToggleAlarmUseCase
 import javax.inject.Inject
 
 class RescheduleNextAlarmUseCase @Inject constructor(

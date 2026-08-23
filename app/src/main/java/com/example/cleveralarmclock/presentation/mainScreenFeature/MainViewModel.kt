@@ -6,7 +6,7 @@ import com.example.cleveralarmclock.core.domain.task.AlarmTaskProvider
 import com.example.cleveralarmclock.core.domain.usecase.manage.DeleteAlarmsUseCase
 import com.example.cleveralarmclock.core.domain.usecase.GetAlarmsUseCase
 import com.example.cleveralarmclock.core.domain.usecase.GetNextAlarmTimeUseCase
-import com.example.cleveralarmclock.core.domain.usecase.ToggleAlarmUseCase
+import com.example.cleveralarmclock.core.domain.usecase.manage.ToggleAlarmUseCase
 import com.example.cleveralarmclock.core.domain.util.DataTimeFormatter
 import com.example.cleveralarmclock.presentation.mainScreenFeature.util.TimeRemainingFormatter
 import dagger.hilt.android.lifecycle.HiltViewModel
