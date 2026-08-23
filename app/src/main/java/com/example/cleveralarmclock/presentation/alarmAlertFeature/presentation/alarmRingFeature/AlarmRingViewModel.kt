@@ -4,7 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cleveralarmclock.core.domain.task.TaskType
-import com.example.cleveralarmclock.core.domain.usecase.GetAlarmByIdUseCase
+import com.example.cleveralarmclock.core.domain.usecase.manage.GetAlarmByIdUseCase
 import com.example.cleveralarmclock.core.domain.usecase.ring.SnoozeAlarmUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject

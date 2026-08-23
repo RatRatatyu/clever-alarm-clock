@@ -7,7 +7,7 @@ import com.example.cleveralarmclock.core.domain.module.Alarm
 import com.example.cleveralarmclock.core.domain.task.AlarmTaskProvider
 import com.example.cleveralarmclock.core.domain.task.TaskType
 import com.example.cleveralarmclock.core.domain.usecase.manage.AddAlarmUseCase
-import com.example.cleveralarmclock.core.domain.usecase.GetAlarmByIdUseCase
+import com.example.cleveralarmclock.core.domain.usecase.manage.GetAlarmByIdUseCase
 import com.example.cleveralarmclock.core.domain.util.DataTimeFormatter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
