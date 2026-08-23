@@ -4,7 +4,7 @@ import android.app.NotificationManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import com.example.cleveralarmclock.core.domain.usecase.DisableAlarmUseCase
+import com.example.cleveralarmclock.core.domain.usecase.schedule.DisableAlarmUseCase
 import com.example.cleveralarmclock.core.domain.usecase.schedule.DismissTodayUseCase
 import com.example.cleveralarmclock.core.domain.util.toPreNotificationId
 import dagger.hilt.android.AndroidEntryPoint
