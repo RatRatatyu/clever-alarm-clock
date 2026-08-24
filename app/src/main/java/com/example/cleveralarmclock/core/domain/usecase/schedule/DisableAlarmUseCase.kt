@@ -11,9 +11,9 @@ class DisableAlarmUseCase @Inject constructor(
     suspend operator fun invoke(id: Int) {
         val alarm = alarmRepository.getAlarmById(id) ?: return
 
-        val updatedAlarm = alarm.copy(isActivate = !alarm.isActivate)
-        alarmRepository.updateAlarm(updatedAlarm)
+        val updatedAlarm = alarm.copy(isActivate = false)
 
+        alarmRepository.updateAlarm(updatedAlarm)
         alarmSchedule.cancel(id)
     }
 }
