@@ -13,7 +13,7 @@ class SnoozeAlarmUseCase @Inject constructor(
     private val alarmPlayer: AlarmPlayer,
     private val alarmSchedule: AlarmSchedule
 ) {
-    operator fun invoke(alarmId: Int){
+    suspend operator fun invoke(alarmId: Int){
         alarmPlayer.stopPlayer()
 
         val intent = Intent(context, AlarmService::class.java)
