@@ -5,6 +5,7 @@ import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import com.example.cleveralarmclock.core.domain.util.toPreNotificationId
 import com.example.cleveralarmclock.core.notifications.NotificationFactory
 import dagger.hilt.android.AndroidEntryPoint
@@ -20,7 +21,12 @@ class PreNotificationReceiver: BroadcastReceiver(){
         val ctx = context ?: return
 
         val alarmId = intent?.getIntExtra("ALARM_ID", -1) ?: -1
-        if (alarmId == -1) return
+        val isRepeated = intent?.getBooleanExtra("IS_REPEATED", false) ?: false
+
+        if (alarmId == -1) {
+            Log.i("ANDROID_DEBUG", "error")
+            return
+        }
 
         val preNotificationId = alarmId.toPreNotificationId()
 
@@ -48,7 +54,8 @@ class PreNotificationReceiver: BroadcastReceiver(){
 
         val notification = notificationFactory.createPreNotification(
             dismissPendingIntent,
-            turnOffPendingIntent
+            turnOffPendingIntent,
+            isRepeated
         )
 
         val notificationManager = ctx.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
