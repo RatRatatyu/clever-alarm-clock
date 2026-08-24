@@ -9,8 +9,15 @@ object AlarmTimeCalculator {
         hour: Int,
         minute: Int,
         repeatDays: Set<DayOfWeek>,
+        skipForToday: Boolean = false,
         now: LocalDateTime = LocalDateTime.now()
     ): LocalDateTime {
+
+        val effectiveNow = if (skipForToday) {
+            now.withHour(23).withMinute(59).withSecond(59)
+        } else {
+            now
+        }
 
         var target = now
             .withHour(hour)
@@ -18,14 +25,16 @@ object AlarmTimeCalculator {
             .withSecond(0)
             .withNano(0)
 
-        if(repeatDays.isEmpty()){
-            if (target.isBefore(now) || target.isEqual(now)) {
+        // For one-time alarm
+        if (repeatDays.isEmpty()) {
+            if (skipForToday || target.isBefore(effectiveNow) || target.isEqual(effectiveNow)) {
                 target = target.plusDays(1)
             }
             return target
         }
 
-        while (!repeatDays.contains(target.dayOfWeek) || target.isBefore(now) || target.isEqual(now)) {
+        // For a repeating alarm
+        while (!repeatDays.contains(target.dayOfWeek) || target.isBefore(effectiveNow) || target.isEqual(effectiveNow)) {
             target = target.plusDays(1)
         }
 
