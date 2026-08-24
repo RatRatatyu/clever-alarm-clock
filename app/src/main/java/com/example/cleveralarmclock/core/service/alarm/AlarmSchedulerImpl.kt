@@ -23,12 +23,19 @@ class AlarmScheduleImpl @Inject constructor(
     private val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
 
     @SuppressLint("MissingPermission")
-    override fun schedule(hour: Int, minute: Int, repeatDays: Set<DayOfWeek>, id: Int){
-
+    override suspend fun schedule(
+        hour: Int,
+        minute: Int,
+        repeatDays: Set<DayOfWeek>,
+        id: Int,
+        skipForToday: Boolean
+    ){
+        Log.i("ALARM_DEBUGER", "$id")
         val localTime = AlarmTimeCalculator.calculateNextTriggerTime(
             hour,
             minute,
-            repeatDays
+            repeatDays,
+            skipForToday
         )
 
         helper(id, localTime)
@@ -37,7 +44,7 @@ class AlarmScheduleImpl @Inject constructor(
     }
 
 
-    override fun snoozeFor10seconds(id: Int) {
+    override suspend fun snoozeFor10seconds(id: Int) {
         val snoozeTime = LocalDateTime.now().plusMinutes(10)
         helper(id.toSnoozeId(), snoozeTime)
         alarmPreNotificationScheduler.preNotificationScheduler(id, snoozeTime)
