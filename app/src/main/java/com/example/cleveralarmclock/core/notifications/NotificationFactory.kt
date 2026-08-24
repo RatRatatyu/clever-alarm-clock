@@ -5,7 +5,6 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
-import android.os.Build
 import androidx.core.app.NotificationCompat
 import com.example.cleveralarmclock.R
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -59,18 +58,30 @@ class NotificationFactory @Inject constructor(
 
     fun createPreNotification(
         dismissPendingIntent: PendingIntent,
-        turnOffPendingIntent: PendingIntent
+        turnOffPendingIntent: PendingIntent,
+        isRepeated: Boolean
     ): Notification {
-        return NotificationCompat.Builder(context, CHANNEL_PRE_ID)
+        val builder = NotificationCompat.Builder(context, CHANNEL_PRE_ID)
             .setSmallIcon(R.drawable.ic_alarm)
             .setContentTitle(context.getString(R.string.upcoming_alarm))
             .setContentText(context.getString(R.string.the_alarm_will_go_off_in_10_minutes))
             .setPriority(NotificationCompat.PRIORITY_LOW)
             .setOngoing(true)
-            .addAction(R.drawable.ic_skip,
-                context.getString(R.string.skip_for_today), dismissPendingIntent)
-            .addAction(R.drawable.ic_notifications_off,
-                context.getString(R.string.turn_off_completely), turnOffPendingIntent)
-            .build()
+
+        if (isRepeated) {
+            builder.addAction(
+                R.drawable.ic_skip,
+                context.getString(R.string.skip_for_today),
+                dismissPendingIntent
+            )
+        }
+
+        builder.addAction(
+            R.drawable.ic_notifications_off,
+            context.getString(R.string.turn_off_completely),
+            turnOffPendingIntent
+        )
+
+        return builder.build()
     }
 }
