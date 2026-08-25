@@ -1,6 +1,5 @@
 package com.example.cleveralarmclock.core.domain.usecase.manage
 
-import com.example.cleveralarmclock.core.domain.alarm.AlarmSchedule
 import com.example.cleveralarmclock.core.domain.repository.AlarmRepository
 import com.example.cleveralarmclock.core.domain.usecase.schedule.ScheduleAlarmUseCase
 import javax.inject.Inject
