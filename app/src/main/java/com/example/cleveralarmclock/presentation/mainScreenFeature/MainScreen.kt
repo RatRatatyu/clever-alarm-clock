@@ -178,11 +178,13 @@ fun MainScreenExpanded(
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.Notifications,
-                                    contentDescription = "Next Alarm",
+                                    contentDescription = stringResource(R.string.next_alarm),
                                     modifier = Modifier.padding(horizontal = 10.dp)
                                 )
                                 Text(
-                                    text = if(nextAlarmText != null) "Next Alarm" else "No active alarms",
+                                    text = if(nextAlarmText != null) stringResource(R.string.next_alarm) else stringResource(
+                                        R.string.no_active_alarms
+                                    ),
                                     style = MaterialTheme.typography.titleSmall
                                 )
                             }
@@ -315,7 +317,7 @@ fun FloatingActionButtonComponent(
     ) {
         Icon(
             imageVector = Icons.Default.Add,
-            contentDescription = "Add alarm clock"
+            contentDescription = stringResource(R.string.add_alarm_clock)
         )
     }
 }
