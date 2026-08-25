@@ -2,11 +2,14 @@ package com.example.cleveralarmclock.core.domain.usecase.manage
 
 import com.example.cleveralarmclock.core.domain.repository.AlarmRepository
 import com.example.cleveralarmclock.core.domain.util.AlarmTimeCalculator
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flow
 import java.time.Duration
 import java.time.LocalDateTime
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.seconds
 
 data class TimeRemaining(
     val hours: Long,
@@ -17,16 +20,31 @@ class GetNextAlarmTimeUseCase @Inject constructor(
     private val alarmRepository: AlarmRepository
 ) {
 
+    private fun tickerFlow(period: kotlin.time.Duration, initialDelay: kotlin.time.Duration = kotlin.time.Duration.ZERO): Flow<Unit> = flow {
+        delay(initialDelay)
+        while (true) {
+            emit(Unit)
+            delay(period)
+        }
+    }
+
     operator fun invoke(): Flow<TimeRemaining?> {
-        return alarmRepository.getActiveAlarms().map { activeAlarms ->
-            if (activeAlarms.isEmpty()) return@map null
+        return combine(
+            alarmRepository.getActiveAlarms(),
+            tickerFlow(60.seconds)
+        ) { activeAlarms, _ ->
+            if (activeAlarms.isEmpty()) return@combine null
 
             val now = LocalDateTime.now()
 
-            val nextAlarmDateTime =
-                activeAlarms.minOfOrNull { alarm ->
-                    AlarmTimeCalculator.calculateNextTriggerTime(alarm.hours, alarm.minutes, alarm.repeatDays) }
-                    ?: return@map null
+            val nextAlarmDateTime = activeAlarms.minOfOrNull { alarm ->
+                AlarmTimeCalculator.calculateNextTriggerTime(
+                    alarm.hours,
+                    alarm.minutes,
+                    alarm.repeatDays,
+                    now = now
+                )
+            } ?: return@combine null
 
             val duration = Duration.between(now, nextAlarmDateTime)
 
@@ -37,6 +55,3 @@ class GetNextAlarmTimeUseCase @Inject constructor(
         }
     }
 }
-
-
-
