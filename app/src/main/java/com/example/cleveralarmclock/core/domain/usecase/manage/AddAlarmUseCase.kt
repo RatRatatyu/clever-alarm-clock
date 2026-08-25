@@ -1,23 +1,18 @@
 package com.example.cleveralarmclock.core.domain.usecase.manage
 
-import com.example.cleveralarmclock.core.domain.alarm.AlarmSchedule
 import com.example.cleveralarmclock.core.domain.module.Alarm
 import com.example.cleveralarmclock.core.domain.repository.AlarmRepository
+import com.example.cleveralarmclock.core.domain.usecase.schedule.ScheduleAlarmUseCase
 import javax.inject.Inject
 
 class AddAlarmUseCase @Inject constructor(
     private val alarmRepository: AlarmRepository,
-    private val alarmSchedule: AlarmSchedule,
+    private val scheduleAlarmUseCase: ScheduleAlarmUseCase
 ){
     suspend operator fun invoke(alarm: Alarm){
 
         val alarmId = alarmRepository.insertAlarm(alarm)
 
-        alarmSchedule.schedule(
-            hour = alarm.hours,
-            minute = alarm.minutes,
-            repeatDays = alarm.repeatDays,
-            id = alarmId.toInt()
-        )
+        scheduleAlarmUseCase(alarm.copy(id = alarmId.toInt()))
     }
 }
