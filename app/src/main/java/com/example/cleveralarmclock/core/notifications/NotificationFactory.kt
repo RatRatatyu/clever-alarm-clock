@@ -59,12 +59,19 @@ class NotificationFactory @Inject constructor(
     fun createPreNotification(
         dismissPendingIntent: PendingIntent,
         turnOffPendingIntent: PendingIntent,
-        isRepeated: Boolean
+        isRepeated: Boolean,
+        alarmTime: String?
     ): Notification {
         val builder = NotificationCompat.Builder(context, CHANNEL_PRE_ID)
             .setSmallIcon(R.drawable.ic_alarm)
             .setContentTitle(context.getString(R.string.upcoming_alarm))
-            .setContentText(context.getString(R.string.the_alarm_will_go_off_in_10_minutes))
+            .setContentText(
+                if (alarmTime != null){
+                    context.getString(R.string.alarm_will_go_off_at, alarmTime)
+                }else{
+                    "Alarm will go off soon"
+                }
+            )
             .setPriority(NotificationCompat.PRIORITY_LOW)
             .setOngoing(true)
 
