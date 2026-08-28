@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import com.example.cleveralarmclock.core.domain.usecase.manage.GetAlarmByIdUseCase
+import com.example.cleveralarmclock.core.domain.util.DataTimeFormatter
 import com.example.cleveralarmclock.core.domain.util.toPreNotificationId
 import com.example.cleveralarmclock.core.service.receivers.PreNotificationReceiver
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -15,7 +16,8 @@ import javax.inject.Inject
 
 class AlarmPreNotificationScheduler @Inject constructor(
     @param:ApplicationContext private val context: Context,
-    private val getAlarmByIdUseCase: GetAlarmByIdUseCase
+    private val getAlarmByIdUseCase: GetAlarmByIdUseCase,
+    private val dataTimeFormatter: DataTimeFormatter
 ){
 
     private val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
@@ -36,11 +38,19 @@ class AlarmPreNotificationScheduler @Inject constructor(
             now
         }
 
-        val alarm = getAlarmByIdUseCase(alarmId)?.isRepeated ?: false
+        val alarm = getAlarmByIdUseCase(alarmId) ?: return
+        val isRepeated = alarm.isRepeated
+        val formattedTime = alarm.let { dataTimeFormatter.convert24To12Hour(it.hours) }
+        val alarmTime = if (formattedTime.is24Format){
+            "${formattedTime.hour}:${alarm.minutes}"
+        }else{
+            "${formattedTime.hour}:${alarm.minutes} ${formattedTime.amPm}"
+        }
 
         val intent = Intent(context, PreNotificationReceiver::class.java).apply {
             putExtra("ALARM_ID", alarmId)
-            putExtra("IS_REPEATED", alarm)
+            putExtra("IS_REPEATED", isRepeated)
+            putExtra("ALARM_TIME", alarmTime)
         }
 
         val pendingIntent = PendingIntent.getBroadcast(
