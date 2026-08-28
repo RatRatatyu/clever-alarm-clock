@@ -45,7 +45,6 @@
     <string name="alarm">Alarm</string>
     <string name="it_s_time_to_get_up">It\'s time to get up!</string>
     <string name="upcoming_alarm">Upcoming Alarm</string>
-    <string name="the_alarm_will_go_off_in_10_minutes">The alarm will go off in 10 minutes</string>
     <string name="skip_for_today">Skip for today</string>
     <string name="turn_off_completely">Turn off completely</string>
     <string name="next_alarm">Next Alarm</string>
@@ -53,4 +52,5 @@
     <string name="add_alarm_clock">Add alarm clock</string>
     <string name="close">Close</string>
     <string name="back">Back</string>
+    <string name="alarm_will_go_off_at">Alarm will go off at %1$s</string>
 </resources>
