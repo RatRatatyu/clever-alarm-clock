@@ -22,6 +22,7 @@ class PreNotificationReceiver: BroadcastReceiver(){
 
         val alarmId = intent?.getIntExtra("ALARM_ID", -1) ?: -1
         val isRepeated = intent?.getBooleanExtra("IS_REPEATED", false) ?: false
+        val alarmTime = intent?.getStringExtra("ALARM_TIME")
 
         if (alarmId == -1) {
             Log.i("ANDROID_DEBUG", "error")
@@ -55,7 +56,8 @@ class PreNotificationReceiver: BroadcastReceiver(){
         val notification = notificationFactory.createPreNotification(
             dismissPendingIntent,
             turnOffPendingIntent,
-            isRepeated
+            isRepeated,
+            alarmTime
         )
 
         val notificationManager = ctx.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
