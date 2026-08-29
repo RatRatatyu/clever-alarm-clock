@@ -69,7 +69,7 @@ class NotificationFactory @Inject constructor(
                 if (alarmTime != null){
                     context.getString(R.string.alarm_will_go_off_at, alarmTime)
                 }else{
-                    "Alarm will go off soon"
+                    context.getString(R.string.alarm_will_go_off_soon)
                 }
             )
             .setPriority(NotificationCompat.PRIORITY_LOW)
