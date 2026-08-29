@@ -53,4 +53,5 @@
     <string name="close">Close</string>
     <string name="back">Back</string>
     <string name="alarm_will_go_off_at">Alarm will go off at %1$s</string>
+    <string name="alarm_will_go_off_soon">Alarm will go off soon</string>
 </resources>
