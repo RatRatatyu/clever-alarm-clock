@@ -40,17 +40,13 @@ class AlarmPreNotificationScheduler @Inject constructor(
 
         val alarm = getAlarmByIdUseCase(alarmId) ?: return
         val isRepeated = alarm.isRepeated
-        val formattedTime = alarm.let { dataTimeFormatter.convert24To12Hour(it.hours) }
-        val alarmTime = if (formattedTime.is24Format){
-            "${formattedTime.hour}:${alarm.minutes}"
-        }else{
-            "${formattedTime.hour}:${alarm.minutes} ${formattedTime.amPm}"
-        }
+
 
         val intent = Intent(context, PreNotificationReceiver::class.java).apply {
             putExtra("ALARM_ID", alarmId)
             putExtra("IS_REPEATED", isRepeated)
-            putExtra("ALARM_TIME", alarmTime)
+            putExtra("ALARM_HOURS", alarm.hours)
+            putExtra("ALARM_MINUTES", alarm.minutes)
         }
 
         val pendingIntent = PendingIntent.getBroadcast(
