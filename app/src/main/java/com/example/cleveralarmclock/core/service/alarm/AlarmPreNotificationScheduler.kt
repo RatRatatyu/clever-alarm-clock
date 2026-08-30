@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import com.example.cleveralarmclock.core.domain.usecase.manage.GetAlarmByIdUseCase
-import com.example.cleveralarmclock.core.domain.util.DataTimeFormatter
 import com.example.cleveralarmclock.core.domain.util.toPreNotificationId
 import com.example.cleveralarmclock.core.service.receivers.PreNotificationReceiver
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -17,7 +16,6 @@ import javax.inject.Inject
 class AlarmPreNotificationScheduler @Inject constructor(
     @param:ApplicationContext private val context: Context,
     private val getAlarmByIdUseCase: GetAlarmByIdUseCase,
-    private val dataTimeFormatter: DataTimeFormatter
 ){
 
     private val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
