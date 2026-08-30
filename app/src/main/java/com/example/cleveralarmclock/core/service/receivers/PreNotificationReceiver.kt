@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+import com.example.cleveralarmclock.core.domain.util.DataTimeFormatter
 import com.example.cleveralarmclock.core.domain.util.toPreNotificationId
 import com.example.cleveralarmclock.core.notifications.NotificationFactory
 import dagger.hilt.android.AndroidEntryPoint
@@ -17,12 +18,17 @@ class PreNotificationReceiver: BroadcastReceiver(){
     @Inject
     lateinit var notificationFactory: NotificationFactory
 
+    @Inject
+    lateinit var dataTimeFormatter: DataTimeFormatter
+
     override fun onReceive(context: Context?, intent: Intent?) {
         val ctx = context ?: return
 
         val alarmId = intent?.getIntExtra("ALARM_ID", -1) ?: -1
         val isRepeated = intent?.getBooleanExtra("IS_REPEATED", false) ?: false
-        val alarmTime = intent?.getStringExtra("ALARM_TIME")
+        val alarmH = intent?.getIntExtra("ALARM_HOURS", 0) ?: 0
+        val alarmM = intent?.getIntExtra("ALARM_MINUTES", 0) ?: 0
+
 
         if (alarmId == -1) {
             Log.i("ANDROID_DEBUG", "error")
@@ -52,6 +58,13 @@ class PreNotificationReceiver: BroadcastReceiver(){
             turnOffIntent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
+
+        val formattedTime = alarmH.let { dataTimeFormatter.convert24To12Hour(it) }
+        val alarmTime = if (formattedTime.is24Format){
+            "${formattedTime.hour}:${alarmM}"
+        }else{
+            "${formattedTime.hour}:${alarmM} ${formattedTime.amPm}"
+        }
 
         val notification = notificationFactory.createPreNotification(
             dismissPendingIntent,
