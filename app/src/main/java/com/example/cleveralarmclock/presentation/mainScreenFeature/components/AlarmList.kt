@@ -6,7 +6,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.example.cleveralarmclock.presentation.mainScreenFeature.AlarmUiModel
@@ -22,6 +24,13 @@ fun AlarmList(
     onPress: (Int) -> Unit,
     onLongPress: (Int) -> Unit,
 ) {
+    val listState = rememberLazyListState()
+
+    LaunchedEffect(scheduleList.size) {
+        if (scheduleList.isNotEmpty()) {
+            listState.animateScrollToItem(0)
+        }
+    }
 
     Column(
         modifier
@@ -31,6 +40,7 @@ fun AlarmList(
 
     ) {
         LazyColumn(
+            state = listState,
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f),
