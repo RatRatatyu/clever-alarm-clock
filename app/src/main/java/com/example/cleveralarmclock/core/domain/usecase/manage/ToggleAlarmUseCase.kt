@@ -14,7 +14,10 @@ class ToggleAlarmUseCase @Inject constructor(
 
         val alarm = getAlarmByIdUseCase(alarmId) ?: return
 
-        val updatedAlarm = alarm.copy(isActivate = !alarm.isActivate)
+        val updatedAlarm = alarm.copy(
+            isActivate = !alarm.isActivate,
+            lastDismissed = null
+        )
         alarmRepository.updateAlarm(updatedAlarm)
 
         scheduleAlarmUseCase(updatedAlarm)
