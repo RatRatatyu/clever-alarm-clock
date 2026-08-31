@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -24,9 +25,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.cleveralarmclock.core.domain.util.toFormattedString
 import java.time.DayOfWeek
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.Locale
 import java.time.format.TextStyle as dayOfWeekFormater
 
@@ -36,6 +40,7 @@ fun CardScheduledAlarm(
     timeText: String,
     taskName: Int?,
     isActive: Boolean,
+    lastDismissed: LocalDate?,
     selectedDaysOfWeek: Set<DayOfWeek>,
     onChanged: () -> Unit,
     onClick: ()-> Unit,
@@ -44,8 +49,8 @@ fun CardScheduledAlarm(
     isChecked: Boolean
 ) {
 
-    val containerColor = if (isActive) MaterialTheme.colorScheme.primary
-    else MaterialTheme.colorScheme.surfaceVariant
+    val baseColor = if (isActive) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant
+    val containerColor = if (lastDismissed == LocalDate.now()) baseColor.copy(alpha = 0.6f) else baseColor
 
     val contentColor = if (isActive) MaterialTheme.colorScheme.onPrimary
     else MaterialTheme.colorScheme.onSurfaceVariant
@@ -116,16 +121,35 @@ fun CardScheduledAlarm(
                 Spacer(modifier = Modifier.height(15.dp))
 
                 // Alarm Status
-                Text(
-                    text = selectedDaysOfWeek.toFormattedString(
-                        isAllSelected = selectedDaysOfWeek.size == 7,
-                        isForCard = true,
-                        context = LocalContext.current
-                    ),
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = contentColor.copy(alpha = 0.8f)
-                )
+                Row(Modifier) {
+                    Text(
+                        text = selectedDaysOfWeek.toFormattedString(
+                            isAllSelected = selectedDaysOfWeek.size == 7,
+                            isForCard = true,
+                            context = LocalContext.current
+                        ),
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = contentColor.copy(alpha = 0.8f)
+                    )
+
+                    lastDismissed?.let { data ->
+                        if (data == LocalDate.now()){
+                            val formatter = DateTimeFormatter.ofPattern("MMM", Locale.getDefault())
+
+                            val shortMonth = data
+                                .format(formatter)
+                                .lowercase()
+
+                            Text(
+                                text = ": Dismiss for ${data.dayOfMonth} $shortMonth",
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontWeight = FontWeight.Bold,
+                                color = contentColor.copy(alpha = 0.8f)
+                            )
+                        }
+                    }
+                }
 
                 Spacer(modifier = Modifier.height(8.dp))
 
@@ -191,6 +215,44 @@ fun CardScheduledAlarm(
                     )
                 }
             }
+        }
+    }
+}
+
+@Preview
+@Composable
+fun CardSchedulePreview(){
+    MaterialTheme{
+        Column(
+            Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            CardScheduledAlarm(
+                timeText = "05:20 PM",
+                taskName = null,
+                isActive = true,
+                lastDismissed = null,
+                selectedDaysOfWeek = setOf(),
+                onChanged = {},
+                onClick = {},
+                onLongClick = {},
+                isSelectionMode = false,
+                isChecked = false
+            )
+
+            CardScheduledAlarm(
+                timeText = "05:20 PM",
+                taskName = null,
+                isActive = true,
+                lastDismissed = LocalDate.now(),
+                selectedDaysOfWeek = setOf(),
+                onChanged = {},
+                onClick = {},
+                onLongClick = {},
+                isSelectionMode = true,
+                isChecked = false
+            )
         }
     }
 }
