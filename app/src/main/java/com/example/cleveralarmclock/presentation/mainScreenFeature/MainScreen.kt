@@ -47,6 +47,7 @@ import com.example.cleveralarmclock.R
 import com.example.cleveralarmclock.presentation.mainScreenFeature.components.AlarmList
 import com.example.cleveralarmclock.presentation.mainScreenFeature.components.NextAlarmInfo
 import java.time.DayOfWeek
+import java.time.LocalDate
 
 
 @Composable
@@ -374,8 +375,8 @@ fun MainScreenPrev() {
 
     val previewAlarms = listOf(
         AlarmUiModel(id = 1, timeFormatted = "07:00", isActivated =  true,  repeatedDays = setOf(
-            DayOfWeek.WEDNESDAY, DayOfWeek.MONDAY), taskName = null),
-        AlarmUiModel(id = 2, timeFormatted = "09:30", isActivated = false, repeatedDays = setOf(), taskName = null)
+            DayOfWeek.WEDNESDAY, DayOfWeek.MONDAY), taskName = null, lastDismissed = null),
+        AlarmUiModel(id = 2, timeFormatted = "09:30", isActivated = false, repeatedDays = setOf(), taskName = null, lastDismissed = LocalDate.now())
     )
     MaterialTheme {
         MainScreenCompact(
@@ -403,8 +404,8 @@ fun MainScreenPrevTablet() {
 
     val previewAlarms = listOf(
         AlarmUiModel(id = 1, timeFormatted = "07:00", isActivated =  true,  repeatedDays = setOf(
-            DayOfWeek.WEDNESDAY, DayOfWeek.MONDAY), taskName = null),
-        AlarmUiModel(id = 2, timeFormatted = "09:30", isActivated = false, repeatedDays = setOf(), taskName = null)
+            DayOfWeek.WEDNESDAY, DayOfWeek.MONDAY), taskName = null, lastDismissed = null),
+        AlarmUiModel(id = 2, timeFormatted = "09:30", isActivated = false, repeatedDays = setOf(), taskName = null, lastDismissed = LocalDate.now())
     )
     MaterialTheme {
         MainScreenExpanded(
