@@ -51,6 +51,7 @@ fun AlarmList(
                     timeText = alarm.timeFormatted,
                     taskName = alarm.taskName,
                     isActive = alarm.isActivated,
+                    lastDismissed = alarm.lastDismissed,
                     selectedDaysOfWeek = alarm.repeatedDays,
                     onChanged = { toggleAlarmStatus(alarm.id) },
                     onClick = { onPress(alarm.id) },
