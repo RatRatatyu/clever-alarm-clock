@@ -21,6 +21,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.DayOfWeek
+import java.time.LocalDate
 import java.util.Locale
 import javax.inject.Inject
 
@@ -36,7 +37,8 @@ data class AlarmUiModel(
     val timeFormatted: String,
     val isActivated: Boolean,
     val repeatedDays: Set<DayOfWeek>,
-    val taskName: Int?
+    val taskName: Int?,
+    val lastDismissed: LocalDate?
 )
 @HiltViewModel
 class MainViewModel @Inject constructor(
@@ -71,7 +73,8 @@ class MainViewModel @Inject constructor(
                     timeFormatted = timeString,
                     isActivated = alarm.isActivate,
                     repeatedDays = alarm.repeatDays,
-                    taskName = taskName?.titleResId
+                    taskName = taskName?.titleResId,
+                    lastDismissed = alarm.lastDismissed
                 )
             }
         }
