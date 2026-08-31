@@ -1,6 +1,5 @@
 package com.example.cleveralarmclock.core.data.database.converters
 
-import androidx.core.provider.FontsContractCompat
 import androidx.room.TypeConverter
 import java.time.DayOfWeek
 import java.time.LocalDate
