@@ -8,36 +8,37 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class AlarmMapper @Inject constructor(){
+class AlarmMapper @Inject constructor() {
+
     fun AlarmEntity.toDomain(): Alarm {
-        val taskId = TaskType.entries.find { it.id == this.taskId } ?: TaskType.SHAKE
-        val repeatDays = if (this.repeatDays.isEmpty()) emptySet() else
-        this.repeatDays.split(",").map { DayOfWeek.of(it.toInt()) }.toSet()
+        val taskType = TaskType.entries.find { it.id == this.taskId } ?: TaskType.SHAKE
 
         return Alarm(
             id = this.id,
             hours = this.hours,
             minutes = this.minutes,
-            taskId = taskId,
-            repeatDays = repeatDays,
+            taskId = taskType,
+            repeatDays = this.repeatDays,
             isRepeated = this.isRepeated,
-            isActivate = this.isActivate
+            isActivate = this.isActivate,
+            lastDismissed = this.lastDismissed
         )
     }
 
-    fun Alarm.toEntity(): AlarmEntity{
+    fun Alarm.toEntity(): AlarmEntity {
         return AlarmEntity(
             id = this.id,
             hours = this.hours,
             minutes = this.minutes,
             taskId = this.taskId.id,
-            repeatDays = this.repeatDays.joinToString(",") { it.value.toString() },
+            repeatDays = this.repeatDays,
             isRepeated = this.isRepeated,
-            isActivate = this.isActivate
+            isActivate = this.isActivate,
+            lastDismissed = this.lastDismissed
         )
     }
 
-    fun List<AlarmEntity>.toDomainList(): List<Alarm>{
+    fun List<AlarmEntity>.toDomainList(): List<Alarm> {
         return this.map { it.toDomain() }
     }
 }
