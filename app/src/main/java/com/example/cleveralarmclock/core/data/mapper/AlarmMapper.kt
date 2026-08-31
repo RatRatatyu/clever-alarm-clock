@@ -3,7 +3,6 @@ package com.example.cleveralarmclock.core.data.mapper
 import com.example.cleveralarmclock.core.data.database.entity.AlarmEntity
 import com.example.cleveralarmclock.core.domain.module.Alarm
 import com.example.cleveralarmclock.core.domain.task.TaskType
-import java.time.DayOfWeek
 import javax.inject.Inject
 import javax.inject.Singleton
 
