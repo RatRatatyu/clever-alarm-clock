@@ -57,8 +57,8 @@ fun CardScheduledAlarm(
 
     val inactiveDayColor = contentColor.copy(alpha = 0.4f)
 
-    val thumbColor = if (isActive) MaterialTheme.colorScheme.primary
-    else MaterialTheme.colorScheme.onSurfaceVariant
+    val baseThumbColor = if (isActive) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
+    val thumbColor = if (lastDismissed == LocalDate.now()) baseThumbColor.copy(alpha = 0.6f) else baseThumbColor
 
     val trackColor = if (isActive) MaterialTheme.colorScheme.onPrimary
     else MaterialTheme.colorScheme.surfaceVariant
