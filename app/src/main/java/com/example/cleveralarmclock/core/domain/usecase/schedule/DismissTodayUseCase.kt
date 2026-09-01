@@ -16,7 +16,7 @@ class DismissTodayUseCase @Inject constructor(
        val updatedAlarm =  alarm.copy(lastDismissed = LocalDate.now())
 
        alarmRepository.updateAlarm(updatedAlarm)
-       scheduleAlarmUseCase(updatedAlarm, true)
+       scheduleAlarmUseCase(updatedAlarm)
 
     }
 }
