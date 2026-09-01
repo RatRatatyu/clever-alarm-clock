@@ -9,21 +9,17 @@ import javax.inject.Inject
 class ScheduleAlarmUseCase @Inject constructor(
     private val alarmSchedule: AlarmSchedule,
 ) {
-    suspend operator fun invoke(alarm: Alarm, skipToday: Boolean = false) {
-        var isSkipped = skipToday
-
+    suspend operator fun invoke(alarm: Alarm) {
         if(!alarm.isActivate){
             alarmSchedule.cancel(alarm.id)
             return
         }
 
-        if (alarm.lastDismissed == LocalDate.now()) isSkipped = true
-
         val triggerTime = AlarmTimeCalculator.calculateNextTriggerTime(
-            alarm.hours,
-            alarm.minutes,
-            alarm.repeatDays,
-            isSkipped
+            hour = alarm.hours,
+            minute = alarm.minutes,
+            repeatDays = alarm.repeatDays,
+            skipForToday = alarm.lastDismissed == LocalDate.now()
         )
 
         alarmSchedule.schedule(alarm.id, triggerTime)
