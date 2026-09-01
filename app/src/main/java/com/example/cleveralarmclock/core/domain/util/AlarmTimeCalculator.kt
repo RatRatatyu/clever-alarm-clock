@@ -9,7 +9,7 @@ object AlarmTimeCalculator {
         hour: Int,
         minute: Int,
         repeatDays: Set<DayOfWeek>,
-        skipForToday: Boolean = false,
+        skipForToday: Boolean,
         now: LocalDateTime = LocalDateTime.now()
     ): LocalDateTime {
 
