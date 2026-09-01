@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
 import java.time.Duration
+import java.time.LocalDate
 import java.time.LocalDateTime
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.seconds
@@ -39,10 +40,10 @@ class GetNextAlarmTimeUseCase @Inject constructor(
 
             val nextAlarmDateTime = activeAlarms.minOfOrNull { alarm ->
                 AlarmTimeCalculator.calculateNextTriggerTime(
-                    alarm.hours,
-                    alarm.minutes,
-                    alarm.repeatDays,
-                    now = now
+                    hour = alarm.hours,
+                    minute = alarm.minutes,
+                    repeatDays = alarm.repeatDays,
+                    skipForToday = alarm.lastDismissed == LocalDate.now()
                 )
             } ?: return@combine null
 
