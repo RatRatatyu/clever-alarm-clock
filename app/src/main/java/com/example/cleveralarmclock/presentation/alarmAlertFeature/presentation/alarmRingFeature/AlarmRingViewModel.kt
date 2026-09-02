@@ -34,6 +34,7 @@ class AlarmRingViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(AlarmRingUiState())
     val uiState: StateFlow<AlarmRingUiState> = _uiState.asStateFlow()
+
     private val _navigationEvent = Channel<TaskType>()
     val navigationEvent = _navigationEvent.receiveAsFlow()
 
