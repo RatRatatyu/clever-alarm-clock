@@ -8,6 +8,8 @@ import android.hardware.SensorManager
 import android.util.Log
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import javax.inject.Inject
 import kotlin.math.sqrt
 
@@ -18,9 +20,12 @@ class ShakeDetector @Inject constructor(
     val accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
     var lastTimeShaken = 0L
 
+    private val _shakeEvent = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
+    val shakeEvent: Flow<Unit>  = _shakeEvent.asSharedFlow()
+
     fun start() {
         sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_UI)
-        Log.i("ALARM_DEBUG", "shale detector start")
+        Log.i("ALARM_DEBUG", "Shake detector start")
     }
 
     fun stop() {
@@ -42,6 +47,7 @@ class ShakeDetector @Inject constructor(
                 if(now - lastTimeShaken >= SHAKE_SLOP_TIME_MS){
                     lastTimeShaken = now
                     Log.d("ALARM_DEBUG", "Device shaken!")
+                    _shakeEvent.tryEmit(Unit)
                 }
 
             }
