@@ -282,7 +282,8 @@ fun MainScreenCompact(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding),
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ){
             NextAlarmInfo(
                 scheduleList = scheduleList,
