@@ -3,6 +3,7 @@ package com.example.cleveralarmclock.presentation.alarmAlertFeature.presentation
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.cleveralarmclock.core.domain.task.AlarmTaskProvider
 import com.example.cleveralarmclock.core.domain.task.TaskType
 import com.example.cleveralarmclock.core.domain.usecase.manage.GetAlarmByIdUseCase
 import com.example.cleveralarmclock.core.domain.usecase.ring.SnoozeAlarmUseCase
@@ -19,7 +20,8 @@ import kotlinx.coroutines.launch
 
 data class AlarmRingUiState(
     val isLoading: Boolean = false,
-    val taskId: TaskType = TaskType.SHAKE
+    val taskId: TaskType = TaskType.SHAKE,
+    val taskName: Int? = null
 
 )
 
@@ -52,9 +54,13 @@ class AlarmRingViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 if(alarmId != -1){
+
                     val alarm = getAlarmByIdUseCase(alarmId)
+                    val taskName = AlarmTaskProvider.getTaskById(alarm?.taskId?.id ?: TaskType.SHAKE.id)
+
                     _uiState.update { it.copy(
-                        taskId = alarm?.taskId ?: TaskType.SHAKE
+                        taskId = alarm?.taskId ?: TaskType.SHAKE,
+                        taskName = taskName?.titleResId
                     ) }
                 }
             } finally {
