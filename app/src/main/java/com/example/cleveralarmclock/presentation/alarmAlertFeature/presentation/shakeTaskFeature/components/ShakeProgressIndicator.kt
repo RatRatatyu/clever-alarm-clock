@@ -21,8 +21,8 @@ fun ShakeProgressIndicator(
         label = "shake_progress_animation"
     )
 
-    val surfaceColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
-    val primaryColor = MaterialTheme.colorScheme.primary
+    val surfaceColor = MaterialTheme.colorScheme.inverseSurface
+    val primaryColor = MaterialTheme.colorScheme.onPrimary
     val strokeWidth = 20.dp
 
     Canvas(modifier.fillMaxSize()) {
