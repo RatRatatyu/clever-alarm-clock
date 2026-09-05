@@ -16,6 +16,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -32,8 +33,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.cleveralarmclock.R
 import com.example.cleveralarmclock.core.domain.task.TaskType
-import java.time.LocalDateTime
-import java.util.Locale
 
 
 @Composable
@@ -75,19 +74,17 @@ fun AlarmRingComponent(
 ){
     val gradientBrush = Brush.linearGradient(
         colors = listOf(
-            MaterialTheme.colorScheme.primary,
-            MaterialTheme.colorScheme.inverseSurface
+            MaterialTheme.colorScheme.primaryContainer,
+            MaterialTheme.colorScheme.background
         )
     )
 
-    val topContentColor = MaterialTheme.colorScheme.onPrimary
+    val topContentColor = MaterialTheme.colorScheme.onPrimaryContainer
 
     Scaffold(
         modifier = modifier
             .fillMaxSize()
     ) { innerPadding ->
-
-        val now = LocalDateTime.now()
 
         Box(
             modifier = Modifier
@@ -121,11 +118,23 @@ fun AlarmRingComponent(
                             modifier = Modifier.padding(bottom = 5.dp)
                         )
 
-                        Text(
-                            text = String.format(Locale.getDefault(), "%02d:%02d", now.hour, now.minute),
-                            color = topContentColor,
-                            style = MaterialTheme.typography.displayLarge.copy(fontSize = 100.sp),
-                        )
+                        Row(
+                            Modifier.padding(horizontal = 10.dp),
+                            verticalAlignment = Alignment.Top
+                        ) {
+                            Text(
+                                text = uiState.currentTime,
+                                color = topContentColor,
+                                style = MaterialTheme.typography.displayLarge.copy(fontSize = 100.sp),
+                            )
+                            if(!uiState.is24Format){
+                                Text(
+                                    text = uiState.amPmValue,
+                                    color = topContentColor,
+                                    style = MaterialTheme.typography.displayMedium,
+                                )
+                            }
+                        }
 
                         uiState.taskName?.let { resId ->
                             Row(Modifier.padding(top = 10.dp)) {
@@ -184,12 +193,15 @@ fun AlarmRingComponent(
 @Preview(showSystemUi = true)
 @Composable
 fun AlarmRingScreenPreview(){
-    MaterialTheme{
+    MaterialTheme(darkColorScheme()){
         AlarmRingComponent(
             uiState = AlarmRingUiState(
+                currentTime = "12:30",
+                amPmValue = "AM",
+                is24Format = false,
                 isLoading = false,
                 taskId = TaskType.SHAKE,
-                taskName = R.string.shake
+                taskName = R.string.shake_task
             ),
             onStopAlarm = {},
             snoozeAlarm = {}
