@@ -6,8 +6,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.darkColorScheme
 import com.example.cleveralarmclock.presentation.alarmAlertFeature.presentation.navigation.AlarmNavHost
-import com.example.cleveralarmclock.ui.theme.CleverAlarmClockTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -27,7 +28,7 @@ class AlarmAlertActivity : ComponentActivity() {
 
         enableEdgeToEdge()
         setContent {
-            CleverAlarmClockTheme {
+            MaterialTheme(colorScheme = darkColorScheme()){
                 AlarmNavHost(alarmId = alarmId)
             }
         }
