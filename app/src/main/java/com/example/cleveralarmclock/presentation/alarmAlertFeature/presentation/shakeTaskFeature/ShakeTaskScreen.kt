@@ -8,10 +8,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -49,12 +51,13 @@ fun ShakeTaskComponent(
     stopMusic: () -> Unit
 ){
 
-    val brushGradient = Brush.radialGradient(
+    val gradientBrush = Brush.radialGradient(
         colors = listOf(
-            MaterialTheme.colorScheme.primary,
-            MaterialTheme.colorScheme.inverseSurface
+            MaterialTheme.colorScheme.onBackground,
+            MaterialTheme.colorScheme.background
         )
     )
+
     Scaffold(
         modifier = modifier
             .fillMaxSize()
@@ -63,8 +66,8 @@ fun ShakeTaskComponent(
         Box(
             Modifier
                 .fillMaxSize()
+                .background(gradientBrush)
                 .padding(innerPadding)
-                .background(brushGradient)
         ){
             Column(
                 Modifier
@@ -83,7 +86,7 @@ fun ShakeTaskComponent(
                     ) {
                         Text(
                             text = "${(currentProgress * 100).toInt()}%",
-                            color = MaterialTheme.colorScheme.inverseOnSurface,
+                            color = MaterialTheme.colorScheme.onPrimary,
                             style = MaterialTheme.typography.titleMedium,
                         )
 
@@ -107,7 +110,7 @@ fun ShakeTaskComponent(
                 }
 
                 //for developer process
-                //Button(onClick = stopMusic, modifier = Modifier.padding(top= 30.dp) ) { Text("stop") }
+                Button(onClick = stopMusic, modifier = Modifier.padding(top= 30.dp) ) { Text("stop") }
             }
         }
     }
@@ -117,7 +120,7 @@ fun ShakeTaskComponent(
 @Preview
 @Composable
 fun ShakeTaskPreview(){
-    MaterialTheme{
+    MaterialTheme(darkColorScheme()){
         ShakeTaskComponent(
             currentProgress = 1.0f,
             isTaskFinished = true,
