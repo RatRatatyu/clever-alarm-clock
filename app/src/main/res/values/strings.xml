@@ -54,4 +54,9 @@
     <string name="back">Back</string>
     <string name="alarm_will_go_off_at">Alarm will go off at %1$s</string>
     <string name="alarm_will_go_off_soon">Alarm will go off soon</string>
+    <string name="shake_phone">Shake phone</string>
+    <string name="well_done">Well done!</string>
+    <string name="shake_your_phone">Shake your phone!</string>
+    <string name="your_task_for_today">"Your task for today: "</string>
+    <string name="stop_alarm">Stop Alarm</string>
 </resources>
