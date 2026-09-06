@@ -59,4 +59,7 @@
     <string name="shake_your_phone">Shake your phone!</string>
     <string name="your_task_for_today">"Your task for today: "</string>
     <string name="stop_alarm">Stop Alarm</string>
+    <string name="take_a_photo">Take a photo</string>
+    <string name="retake_a_photo">Retake a photo</string>
+    <string name="the_photo_you_just_took">The photo you just took</string>
 </resources>
