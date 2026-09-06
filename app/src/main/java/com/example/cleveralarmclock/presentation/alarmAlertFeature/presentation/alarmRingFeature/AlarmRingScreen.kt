@@ -139,7 +139,7 @@ fun AlarmRingComponent(
                         uiState.taskName?.let { resId ->
                             Row(Modifier.padding(top = 10.dp)) {
                                 Text(
-                                    text = "Your task for today: ",
+                                    text = stringResource(R.string.your_task_for_today),
                                     color = topContentColor,
                                     style = MaterialTheme.typography.bodyLarge
                                 )
@@ -167,7 +167,7 @@ fun AlarmRingComponent(
                             onClick = { onStopAlarm() },
                             modifier = Modifier.fillMaxWidth()
                         ) {
-                            Text("Stop Alarm")
+                            Text(stringResource(R.string.stop_alarm))
                         }
 
                         Button(
