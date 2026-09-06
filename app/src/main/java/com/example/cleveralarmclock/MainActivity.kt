@@ -44,6 +44,11 @@ class MainActivity : ComponentActivity() {
             LaunchedEffect(Unit) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                     val hasPermission = permissionHandler.hasPermission(Manifest.permission.POST_NOTIFICATIONS)
+                    val cameraPermissions = permissionHandler.hasPermission(Manifest.permission.CAMERA)
+
+                    if (cameraPermissions == PermissionTypes.DENIED){
+                        permissionLauncher.launch(Manifest.permission.CAMERA)
+                    }
 
                     if (hasPermission == PermissionTypes.DENIED) {
                         permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
