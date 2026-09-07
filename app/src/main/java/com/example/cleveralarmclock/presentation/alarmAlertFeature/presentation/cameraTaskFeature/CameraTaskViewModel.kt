@@ -17,13 +17,14 @@ import javax.inject.Inject
 data class CameraTaskUiState(
     val lastTakenPhoto: Bitmap? = null,
     val isLoading: Boolean = false,
-    val target: String = "Bed",
+    val target: String = "",
 )
 
 @HiltViewModel
 class CameraTaskViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val stopAlarmUseCase: StopAlarmPlayerUseCase,
+    private val classifier: TFLiteClassifier
 ): ViewModel() {
 
     private val alarmId: Int = checkNotNull(savedStateHandle["alarmId"])
@@ -35,8 +36,10 @@ class CameraTaskViewModel @Inject constructor(
 
     fun onTakePhoto(photo: Bitmap?){
         photo?.let {
+            val result = classifier.classify(photo)
             _uiState.update { it.copy(
-                lastTakenPhoto = photo
+                lastTakenPhoto = photo,
+                target = result // using to test the model result for now
             ) }
         }
 
