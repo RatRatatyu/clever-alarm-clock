@@ -11,6 +11,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -57,13 +58,13 @@ fun CameraTaskComponent(
             verticalArrangement = Arrangement.Center
         ) {
             //for developing process
-            Button(onClick = { stopMusic() }) { Text("stop") }
+            //Button(onClick = { stopMusic() }) { Text("stop") }
 
             Card(
                 Modifier.padding(20.dp),
                 colors = CardDefaults.cardColors(
                     containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                    contentColor = MaterialTheme.colorScheme.onTertiary
+                    contentColor = MaterialTheme.colorScheme.onTertiaryContainer
                 )
             ) {
                 Text(
@@ -88,7 +89,7 @@ fun CameraTaskComponent(
 @Preview(showBackground = true, name = "Normal State")
 @Composable
 fun CameraTaskComponentPreview() {
-    CleverAlarmClockTheme{
+    MaterialTheme(darkColorScheme()){
         CameraTaskComponent(
             uiState = CameraTaskUiState(
                 isLoading = false,
@@ -104,7 +105,7 @@ fun CameraTaskComponentPreview() {
 @Preview(showBackground = true, name = "Loading State")
 @Composable
 fun CameraTaskComponentLoadingPreview() {
-    CleverAlarmClockTheme{
+    MaterialTheme(darkColorScheme()){
         CameraTaskComponent(
             uiState = CameraTaskUiState(
                 isLoading = true,
