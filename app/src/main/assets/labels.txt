@@ -1,0 +1,10 @@
+chair
+door
+lamp
+laptop
+photo frame
+potted plant
+sofa
+table
+tv
+window
