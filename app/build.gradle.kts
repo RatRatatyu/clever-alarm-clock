@@ -43,6 +43,14 @@ android {
 
 
 dependencies {
+    implementation(libs.google.litert)
+    implementation(libs.google.litert.support) {
+        exclude(group = "com.google.ai.edge.litert", module = "litert-api")
+    }
+    implementation(libs.litert.support.api) {
+        exclude(group = "com.google.ai.edge.litert", module = "litert-api")
+    }
+
     implementation(libs.androidx.camera.view)
     implementation(libs.androidx.camera.camera2)
     implementation(libs.androidx.camera.lifecycle)
