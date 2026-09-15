@@ -11,16 +11,16 @@ import org.tensorflow.lite.support.common.FileUtil
 import org.tensorflow.lite.support.image.ImageProcessor
 import org.tensorflow.lite.support.image.TensorImage
 import org.tensorflow.lite.support.image.ops.ResizeOp
+import org.tensorflow.lite.support.image.ops.ResizeWithCropOrPadOp
 import javax.inject.Inject
 import javax.inject.Singleton
-
 
 @Singleton
 class TFLiteClassifier @Inject constructor(
     @param:ApplicationContext private val context: Context
 ) {
-    var model: CompiledModel? = null
-    var labels: List<String> = emptyList()
+    private var model: CompiledModel? = null
+    private var labels: List<String> = emptyList()
 
     init {
         try {
@@ -36,30 +36,45 @@ class TFLiteClassifier @Inject constructor(
         }
     }
 
-
     fun classify(bitmap: Bitmap): String {
-        val currentInterpreter = model ?: return "Model is not loaded"
+        val currentModel = model ?: return "Model is not loaded"
 
+        val width = bitmap.width
+        val height = bitmap.height
+        val squareSize = if (height > width) width else height
+
+        // We don't use NormalizeOp because a Rescaling layer already exists in the model.
         val imageProcessor = ImageProcessor.Builder()
+            .add(ResizeWithCropOrPadOp(squareSize, squareSize))
             .add(ResizeOp(224, 224, ResizeOp.ResizeMethod.BILINEAR))
             .build()
-
 
         var tensorImage = TensorImage(DataType.FLOAT32)
         tensorImage.load(bitmap)
         tensorImage = imageProcessor.process(tensorImage)
 
-        val inputBuffers = currentInterpreter.createInputBuffers()
-        val outputBuffers = currentInterpreter.createOutputBuffers()
+        val inputBuffers = currentModel.createInputBuffers()
+        val outputBuffers = currentModel.createOutputBuffers()
 
         inputBuffers[0].writeFloat(tensorImage.tensorBuffer.floatArray)
 
-        currentInterpreter.run(inputBuffers, outputBuffers)
+        currentModel.run(inputBuffers, outputBuffers)
 
         val probabilities = outputBuffers[0].readFloat()
-        Log.i("ALARM_DEBUG", "$labels")
-        Log.i("ALARM_DEBUG", probabilities.contentToString())
+
+        Log.i("ALARM_DEBUG", "results")
+        labels.forEachIndexed { index, label ->
+            if (index < probabilities.size) {
+                val percent = (probabilities[index] * 100).toInt()
+                Log.i("ALARM_DEBUG", "$label: $percent%")
+            }
+        }
+
+        Log.i("ALARM_DEBUG", "Labels: $labels")
+        Log.i("ALARM_DEBUG", "Probability: ${probabilities.contentToString()}")
+
         val maxIndex = probabilities.indices.maxByOrNull { probabilities[it] } ?: -1
+        Log.i("ALARM_DEBUG", "index $maxIndex")
 
         return if (maxIndex != -1 && maxIndex < labels.size) {
             labels[maxIndex]
