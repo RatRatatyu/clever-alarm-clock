@@ -1,3 +1,6 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -5,11 +8,21 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.android.hilt)
 }
+
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localProperties.load(FileInputStream(localPropertiesFile))
+}
+
 android {
     namespace = "com.example.cleveralarmclock"
     compileSdk = 36
 
     defaultConfig {
+        val hfToken = localProperties.getProperty("HF_TOKEN") ?: ""
+        buildConfigField("String", "HF_TOKEN", hfToken)
+
         applicationId = "com.example.cleveralarmclock"
         minSdk = 26
         targetSdk = 36
@@ -17,6 +30,11 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+    
+    buildFeatures {
+        buildConfig = true
+        compose = true
     }
 
     buildTypes {
@@ -35,14 +53,14 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
-    buildFeatures {
-        compose = true
-    }
 }
 
-
-
 dependencies {
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.converter.gson)
+    implementation(libs.okhttp)
+    implementation(libs.okhttp.logging.interceptor)
+
     implementation(libs.google.litert)
     implementation(libs.google.litert.support) {
         exclude(group = "com.google.ai.edge.litert", module = "litert-api")
