@@ -4,6 +4,8 @@ import android.graphics.Bitmap
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.cleveralarmclock.core.data.remote.dto.ClassificationResponseDto
+import com.example.cleveralarmclock.core.domain.repository.ImageClassifierRepository
 import com.example.cleveralarmclock.core.domain.usecase.ring.StopAlarmPlayerUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,12 +19,14 @@ data class CameraTaskUiState(
     val lastTakenPhoto: Bitmap? = null,
     val isLoading: Boolean = false,
     val target: String = "",
+    val testList: List<ClassificationResponseDto> = listOf()
 )
 
 @HiltViewModel
 class CameraTaskViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val stopAlarmUseCase: StopAlarmPlayerUseCase,
+    private val imageClassifierRepository: ImageClassifierRepository
 ): ViewModel() {
 
     private val alarmId: Int = checkNotNull(savedStateHandle["alarmId"])
@@ -33,10 +37,14 @@ class CameraTaskViewModel @Inject constructor(
 
 
     fun onTakePhoto(photo: Bitmap?){
-        photo?.let {
-            _uiState.update { it.copy(
-                lastTakenPhoto = photo,
-            ) }
+        viewModelScope.launch {
+            photo?.let {
+                val result = imageClassifierRepository.classifyImage(photo)
+                _uiState.update { it.copy(
+                    lastTakenPhoto = photo,
+                    testList = result
+                ) }
+            }
         }
         //TODO(sent photo to classification AI model)
     }
