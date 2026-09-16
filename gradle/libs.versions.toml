@@ -20,8 +20,14 @@ lifecycleService = "2.8.7"
 cameraView = "1.6.2"
 liteRt = "2.1.0"
 litertSupportApi = "1.4.2"
+retrofit = "2.11.0"
+okhttp = "4.12.0"
 
 [libraries]
+retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+retrofit-converter-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
+okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
+okhttp-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
 google-litert-support = {group = "com.google.ai.edge.litert", name = "litert-support", version.ref = "litertSupportApi"}
 google-litert = {group = "com.google.ai.edge.litert", name = "litert", version.ref = "liteRt"}
 litert-support-api = { group = "com.google.ai.edge.litert", name = "litert-support-api", version.ref = "litertSupportApi" }
