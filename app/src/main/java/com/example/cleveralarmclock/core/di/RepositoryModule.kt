@@ -2,7 +2,9 @@ package com.example.cleveralarmclock.core.di
 
 import com.example.cleveralarmclock.core.domain.repository.AlarmRepository
 import com.example.cleveralarmclock.core.data.repository.AlarmRepositoryImpl
+import com.example.cleveralarmclock.core.data.repository.ImageClassifierRepositoryImpl
 import com.example.cleveralarmclock.core.data.repository.ShakeRepositoryImpl
+import com.example.cleveralarmclock.core.domain.repository.ImageClassifierRepository
 import com.example.cleveralarmclock.core.domain.repository.ShakeRepository
 import dagger.Binds
 import dagger.Module
@@ -25,4 +27,10 @@ abstract class RepositoryModule {
     abstract fun bindShakeRepository(
         shakeRepositoryImpl: ShakeRepositoryImpl
     ): ShakeRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindImageClassifierRepository(
+        imageClassifierRepositoryImpl: ImageClassifierRepositoryImpl
+    ): ImageClassifierRepository
 }
