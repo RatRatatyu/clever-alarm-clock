@@ -66,7 +66,7 @@ fun CameraTaskComponent(
                 )
             ) {
                 Text(
-                    text = uiState.target,
+                    text = "Find a ${uiState.target}",
                     modifier = Modifier.padding(20.dp)
                 )
             }
